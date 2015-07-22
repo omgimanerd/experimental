@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TEST</title>
+  <script type="text/javascript">
+  var game = new Object();
+  game.next = 65 + Math.floor(((Math.random() * 1000) % 26));
+  game.score = 0;
+  game.newNext = function () {
+    game.next = 65 + Math.floor(((Math.random() * 1000) % 26));
+  }
+  game.checkKey = function (e) {
+    e = e || window.event;
+    if (game.next == e.keyCode) {
+      document.getElementById('clue').innerHTML = "Nailed it!";
+      game.score++;
+      game.newNext();
+    }
+    else if (game.next < e.keyCode) {
+      document.getElementById('clue').innerHTML = "Lower...";
+    }
+    else {
+      document.getElementById('clue').innerHTML = "Higher...";
+    }
+    document.getElementById('output').innerHTML = "Key to press: " +
+        game.next.toString();
+    document.getElementById('score').innerHTML = "Score: " +
+        game.score.toString();
+  }
+  document.onkeydown = game.checkKey;
+  </script>
+</head>
+
+<body>
+  <div id="output">
+  </div>
+  <div id="clue">
+  Press a key
+  </div>
+  <div id="score">
+  </div>
+</body>
+
+</html>

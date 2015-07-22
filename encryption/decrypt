@@ -1,0 +1,136 @@
+#!/usr/bin/python
+
+import argparse
+import getpass
+import hashlib
+import os
+
+def wrap(num):
+    while num < 0:
+        num += 256
+    return num % 256
+
+def decode(filename, key, encryptedtext):
+    if ord(key[0]) == 2:
+        print "Enter decryption key for " + filename + ":"
+        userinput = getpass.getpass();
+        key = hashlib.sha256(userinput).hexdigest()
+    else:
+        key = key[1:]
+
+    decryptedtext = ""
+    for i in range(len(encryptedtext)):
+        shift = ord(key[i % len(key)])
+        if i % 2 == 0:
+            shift *= -1
+        decryptedtext += chr(wrap(ord(encryptedtext[i]) - shift))
+    return decryptedtext
+
+excluded_types = ["jpg", "png", "ico", "jpeg", "mp3", "mp4", "ogg", "class",
+                  "pdf", "iso", "msi", "exe", "gif"]
+
+def list_files(path):
+    files = []
+    for name in os.listdir(path):
+        pathname = os.path.join(path, name)
+        if name[0] == '.' or name.split('.')[-1] in excluded_types or os.path.islink(pathname):
+            continue
+        if os.path.isfile(pathname):
+            files.append(os.path.relpath(pathname))
+    return files
+
+def list_files_recursively(path):
+    files = []
+    for name in os.listdir(path):
+        pathname = os.path.join(path, name)
+        if name[0] == '.' or name.split('.')[-1] in excluded_types or os.path.islink(pathname):
+            continue
+        if os.path.isfile(pathname):
+            files.append(os.path.relpath(pathname))
+        else:
+            subfiles = list_files_recursively(pathname)
+            for subfile in subfiles:
+                files.append(os.path.relpath(subfile))
+    return files
+
+def list_files_all(path):
+    files = []
+    for name in os.listdir(path):
+        pathname = os.path.join(path, name)
+        if os.path.islink(pathname):
+            continue
+        if os.path.isfile(pathname):
+            files.append(os.path.relpath(pathname))
+        else:
+            subfiles = list_files_all(pathname)
+            for subfile in subfiles:
+                files.append(os.path.relpath(subfile))
+    return files
+
+################################################################################
+################################################################################
+################################################################################
+
+def main():
+    parser = argparse.ArgumentParser(description='This script decrypts specified files encrypted by the matching algorithm. If arguments are provided, then this script will decrypt all specified files and look inside all specified folders for files to decrypt. If no arguments are provided, every file and folder in the current working directory will be automatically passed in.')
+    parser.add_argument('-a', '-all', action='store_true',
+                        help='encrypt hidden and non-hidden files recursively')
+    parser.add_argument('-r', '-recursive', action='store_true',
+                        help='encrypt only non-hidden files recursively')
+    parser.add_argument('files', nargs='*', default=argparse.SUPPRESS,
+                        help='the file(s) or folder(s) to encrypt')
+    args = parser.parse_args()
+
+    filenames = []
+    if 'files' in vars(args):
+        for files in args.files:
+            if files[-1] == '/':
+                files = files[:-1] 
+            fullpath = os.path.join(os.getcwd(), files)
+            if not(files in os.listdir(os.getcwd())):
+                print files + ' not found, skipping.'
+            elif os.path.isfile(fullpath):
+                filenames.append(files)
+            else:
+                if args.a:
+                    filenames += list_files_all(fullpath)
+                elif args.r:
+                    filenames += list_files_recursively(fullpath)
+                else:
+                    filenames += list_files(fullpath)
+    elif args.a:
+        filenames = list_files_all(os.getcwd())
+    elif args.r:
+        filenames = list_files_recursively(os.getcwd())
+    else:
+        filenames = list_files(os.getcwd())
+
+    files_decrypted = 0
+
+    for filename in filenames:
+        try:
+            inputfile = open(filename, "r")
+        except:
+            print filename + " not found, skipping."
+            continue
+        stor = inputfile.read()
+        inputfile.close()
+
+        if len(stor) == 0 or (ord(stor[0]) != 1 and ord(stor[0]) != 2):
+            print "Error decrypting " + filename + ". Invalid keystring"
+            continue
+
+        key = stor.split('\n')[0]
+        stor = stor[len(key) + 1:]
+
+        outputfile = open(filename, "wb+")
+        outputfile.write(decode(filename, key, stor))
+        outputfile.close()
+
+        files_decrypted += 1
+        print "Decrypted " + filename
+
+    print "Decryption finished. " + str(files_decrypted) + " files decrypted"
+
+if __name__ == "__main__":
+    main()

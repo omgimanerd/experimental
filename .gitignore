@@ -1,0 +1,7 @@
+*.exe
+test.*
+*.ini
+*eclipse
+*.class
+Thumbs.db
+*node_modules*

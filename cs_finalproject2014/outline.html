@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Project Outline</title>
+    <link href="data/style.css" rel="stylesheet" type="text/css"/>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+</head>
+
+<body>
+  <div class="floater"></div>
+  <div id="content-box">
+    <img src="data/logo.png" class="logo"/>
+    <table id="outline">
+      <tr>
+        <td>
+          <h2>
+            Outline
+          </h2>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <hr />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <p>Our project is a version of Stuyvesant Confessions. A person can register an account and once they have logged in they have the ability to view who the other users are and anything other users may have posted.</p>
+          <p>The login and register pages are basic html forms using the post method that are styled using a separate CSS file and linked to python programs that search through or append to a text file that contains all of the users and their passwords. When you register, your password is hashed using the sha256 algorithm, thus your password is only ever known to yourself or whomever you give it to.</p>
+          <p>The page generated after you login is created by the python program which the login form is linked to. It is also styled using a separate CSS file and using a python script it analyzes the username and password that was input and makes sure they match with what is in the database. If the user input everything correctly then they are taken to the userpage where they can post what they like and view who the other users are. This interface is handled by a script that first prints html that sets up the page and then reads the file containing the users and on the left side returns the names of all the users.</p>
+          <p>Total time spent developing: ~50 hours</p>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <button type="button" onclick="window.history.back();">Back</button>
+        </td>
+      </tr>
+    </table>
+  </div>
+</body>
+
+</html>
+
