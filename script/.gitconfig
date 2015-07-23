@@ -1,0 +1,11 @@
+[push]
+	default = simple
+[user]
+	email = alvin.lin@stuypulse.com
+	name = Alvin Lin
+[core]
+	editor = emacs
+[help]
+	autocorrect = 10
+[diff]
+	tool = tkdiff
