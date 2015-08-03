@@ -1,0 +1,7 @@
+#!/usr/bin/python
+
+import hashlib
+import random
+
+while True:
+    print hashlib.sha256(str(random.randint(0, 1000))).hexdigest() * 2
