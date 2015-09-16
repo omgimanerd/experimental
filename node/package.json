@@ -1,8 +1,0 @@
-{
-  "name": "node",
-  "version": "0.0.1",
-  "description": "testing node",
-  "dependencies": {
-    "express": "~4.12.3"
-  }
-}
