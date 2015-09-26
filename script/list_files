@@ -28,17 +28,6 @@ def list_files_recursively(path):
                 files.append(os.path.join(name, subfile))
     return files
 
-def list_files_all(path):
-    files = []
-    for name in os.listdir(path):
-        fullpath = os.path.join(path, name)
-        if os.path.isfile(fullpath):
-            files.append(name)
-        else:
-            subfiles = list_files_all(os.path.join(path, name))
-            for subfile in subfiles:
-                files.append(os.path.join(name, subfile))
-    return files
     
 parser = argparse.ArgumentParser(description='Outputs files in the current working directory to the terminal output based on some parameters. If a file or folder is passed in, then this script will list that file and look in the folder for files to list. If no arguments are passed, then the contents of the entire working directory are passed in.')
 parser.add_argument('-a', '-all', action='store_true',
