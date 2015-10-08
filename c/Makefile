@@ -1,8 +1,8 @@
 sizes.out: sizes.o
-	gcc sizes.o -o sizes
+	gcc sizes.o -o sizes.out
 
 sizes.o: sizes.c
-	gcc -h sizes.c
+	gcc -c sizes.c
 
 run-sizes:
-	./sizes
+	./sizes.out
