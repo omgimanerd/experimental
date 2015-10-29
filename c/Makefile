@@ -1,8 +1,16 @@
-sizes.out: sizes.o
-	gcc sizes.o -o sizes.out
+all: sizes.out file.out
 
-sizes.o: sizes.c
-	gcc -c sizes.c
+sizes.out: sizes.c
+	gcc sizes.c -o sizes.out
 
 run-sizes:
 	./sizes.out
+
+file.out: file.c
+	gcc file.c -o file.out
+
+run-file:
+	./file.out
+
+clean:
+	rm *.out
