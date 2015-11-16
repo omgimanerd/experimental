@@ -51,10 +51,11 @@ def main():
   headers = { "Content-type": "application/x-www-form-urlencoded" }
   data = {
     'js_code': js,
-    'language': 'ECMASCRIPTS',
+    'language': 'ECMASCRIPT6',
     'compilation_level': 'SIMPLE_OPTIMIZATIONS',
-    'output_format': 'text',
-    'output_info': 'compiled_code'
+    'output_format': 'json',
+    'output_info': 'compiled_code',
+    'warning_level': 'VERBOSE'
   }
   r = requests.post('http://closure-compiler.appspot.com/compile',
                     headers=headers,
