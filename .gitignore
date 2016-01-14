@@ -7,3 +7,4 @@ test.*
 *.class
 Thumbs.db
 *node_modules*
+/gmail

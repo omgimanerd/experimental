@@ -1,4 +1,4 @@
-all: sizes.out file.out struct.out pointer.out
+all: sizes.out file.out struct.out pointer.out cwd.out
 
 sizes.out: sizes.c
 	gcc sizes.c -o sizes.out
@@ -29,6 +29,12 @@ pointer.out: pointer.c
 
 run-pointer: pointer.out
 	./pointer.out
+
+cwd.out: cwd.c
+	gcc cwd.c -o cwd.out
+
+run-cwd: cwd.out
+	./cwd.out
 
 clean:
 	rm *.out

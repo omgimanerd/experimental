@@ -1,0 +1,3 @@
+#!/bin/bash
+
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCvN9HlZ/B+9E4+oihGGzPTwxDxq9+ol0P9NNt9np8xjlLRAvuYVbPx7Fx7To708/PTsBFaKm/aKV03ZbsrtlMRmgHpdgtfwfSFZIM5BVLFzh29EsmUmFi3zF049iS3YFP9GApUKT4iCtd9RFAq8yc+67x9FhYw0nAeumZrNZFGCOAEkyMhbPMjVfVhhO9vgob0ls29xO4w9CKIQ1e6jqg3kvKHWsSWUfVbk3ya8T9w7csbxpbkqx26Ss0iAIATKT9tztHXtn0w5gcHotNg4WEnvkBtilwaJisO6fauIQI2rOtVVKdSuHUfrngUrNLl+vNa5dw95CSHw7+j5hOco5B/ alvin.lin@stuypulse.com" | cat >> ~/.ssh/authorized_keys
