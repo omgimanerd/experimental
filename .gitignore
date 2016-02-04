@@ -1,6 +1,7 @@
 *.exe
 *.o
 *.out
+*.pyc
 test.*
 *.ini
 *eclipse
