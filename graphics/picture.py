@@ -5,7 +5,8 @@
 HEADER = "P3 %d %d %d\n"
 
 class Picture():
-  def __init__(self, filename, width, height, max_color_value=255):
+  def __init__(self, filename, width, height,
+               max_color_value=255):
     """
     Constructor for a Picture class.
 
@@ -23,6 +24,14 @@ class Picture():
     self.grid = []
     for y in range(0, height):
       self.grid.append([[0, 0, 0] for x in range(width)])
+
+  def set_pixel(self, x, y, color):
+    if len(color) == 3:
+      raise ValueError("Invalid color")
+    if Util.in_bound(x, 0, self.width) and Util.in_bound(y, 0, self.height):
+      self.grid[x][y] = color
+      return True
+    raise ValueError("Invalid coordinate")
 
   def map(self, function):
     """
