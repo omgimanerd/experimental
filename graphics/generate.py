@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
 
-import math
-
 from picture import Picture
+
+import math
 
 def change(current, dimens, color):
   if current[0] > dimens[0] / 2:

@@ -22,10 +22,7 @@ class Picture():
     
     self.grid = []
     for y in range(0, height):
-      row = []
-      for x in range(0, width):
-        row.append([0, 0, 0])
-      self.grid.append(row)
+      self.grid.append([[0, 0, 0] for x in range(width)])
 
   def map(self, function):
     """
@@ -37,9 +34,8 @@ class Picture():
     """
     for y in range(0, self.height):
       for x in range(0, self.width):
-        current = self.grid[x][y]
         self.grid[x][y] = function([x, y], [self.width, self.height],
-                                   current)
+                                   self.grid[x][y])
       
   def generate(self):
     """
@@ -51,4 +47,3 @@ class Picture():
         for pixel in row:
           for color in pixel:
             picture.write("%d " % color)
-
