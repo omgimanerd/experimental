@@ -30,6 +30,9 @@ class Picture():
     x: number, the x coordinate of the pixel to set
     y: number, the y coordinate of the pixel to set
     color: [red, green, blue], the RGB color to set the pixel to
+
+    Returns:
+    None
     """
     if len(color) == 3:
       raise ValueError("Invalid color.")
@@ -48,6 +51,9 @@ class Picture():
       that is run on the pixels in the grid.
     section: [[x1, y1], [x2, y2]], opposite corners of a rectangular region
       in the grid to apply the function transformation to.
+
+    Returns:
+    None
     """
     x_range = [0, self.width]
     y_range = [0, self.height]
@@ -65,6 +71,12 @@ class Picture():
   def generate(self):
     """
     Turns the internal grid into a ppm raster image file and generates the file.
+
+    Parameters:
+    None
+
+    Returns:
+    None
     """
     with open(self.filename, "w") as picture:
       picture.write(HEADER % (self.width, self.height, self.max_color_value))
