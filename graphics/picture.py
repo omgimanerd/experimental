@@ -14,7 +14,7 @@ class Picture():
     filename: string, the name of the new image file
     width: number, the width of the image in pixels
     height: number, the height of the image in pixels
-    max_color_value: the max color value of the ppm, defaults to 255
+    max_color_value: number, the max color value of the ppm, defaults to 255
     """
     self.filename = filename
     self.width = width
@@ -23,12 +23,20 @@ class Picture():
     self.grid = [[[0, 0, 0] for x in range(width)] for y in range(height)]
 
   def set_pixel(self, x, y, color):
+    """
+    Sets the specified pixel to the specified color.
+
+    Parameters:
+    x: number, the x coordinate of the pixel to set
+    y: number, the y coordinate of the pixel to set
+    color: [red, green, blue], the RGB color to set the pixel to
+    """
     if len(color) == 3:
-      raise ValueError("Invalid color")
+      raise ValueError("Invalid color.")
     if Util.in_bound(x, 0, self.width) and Util.in_bound(y, 0, self.height):
       self.grid[x][y] = color
       return True
-    raise ValueError("Invalid coordinate")
+    raise ValueError("Invalid coordinate.")
 
   def map(self, function, section=None):
     """
@@ -36,7 +44,8 @@ class Picture():
     
     Parameters:
     function: function([currentX, currentY], [width, height],
-                       [currentR, currentG, currentB])
+                       [currentR, currentG, currentB]), a callback function
+      that is run on the pixels in the grid.
     section: [[x1, y1], [x2, y2]], opposite corners of a rectangular region
       in the grid to apply the function transformation to.
     """

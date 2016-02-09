@@ -1,15 +1,24 @@
 #!/usr/bin/python
 # Author: Alvin Lin (alvin.lin.dev@gmail.com)
-# This is a class that contains drawing methods applied to the Picture class.
+# This is a class abstracting the Transformation and Picture classes into a
+# general Drawing class.
 
 from picture import Picture
-from util import Util
+from transformation import Transformation
 
 class Drawing():
-  @staticmethod
-  def line_lambda(a, b, c, line_color, thickness):
-    return lambda current, dimens, current_color: (
-      line_color if Util.is_point_on_line(
-        a, b, c, current[0], current[1], thickness) else current_color
-    )
+  def __init__(self, name, width, height):
+    self.picture = Picture(name, width, height)
+    
+  def draw_point(self, x, y, color):
+    self.picture.set_pixel(x, y, color)
 
+  def stroke_circle(self, cx, cy, r, color, thickness):
+    self.picture.map(Transformation.circle_stroke_lambda(
+      cx, cy, r, color, thickness))
+
+  def fill_circle(self, cx, cy, r, color):
+    self.picture.map(Transformation.circle_fill_lambda(cx, cy, r, color))
+
+  def generate(self):
+    self.picture.generate()

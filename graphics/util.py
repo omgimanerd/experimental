@@ -14,12 +14,21 @@ class Util():
     return x >= lower and x <= upper
 
   @staticmethod
+  def is_almost_equal(a, b, epsilon=1):
+    return abs(a - b) <= epsilon
+
+  @staticmethod
   def is_point_on_line(a, b, c, px, py, threshold=2):
     return (abs(px * a + py * b + c) / math.sqrt(a * a + b * b)) <= threshold
 
   @staticmethod
   def is_point_on_circle(cx, cy, r, px, py, threshold=2):
-    return get_euclidean_distance(cx, cy, px, py) - r <= threshold
+    return Util.is_almost_equal(
+      Util.get_euclidean_distance(cx, cy, px, py), r, threshold)
+
+  @staticmethod
+  def is_point_in_circle(cx, cy, r, px, py):
+    return Util.get_euclidean_distance(cx, cy, px, py) <= r
 
   @staticmethod
   def get_manhattan_distance(x1, y1, x2, y2):
@@ -31,8 +40,11 @@ class Util():
 
   @staticmethod
   def get_euclidean_distance(x1, y1, x2, y2):
-    return math.sqrt(get_euclidean_distance_sq(x1, y1, x2, y1))
+    return math.sqrt(Util.get_euclidean_distance_sq(x1, y1, x2, y2))
 
   @staticmethod
   def are_points_closer_than(x1, y1, x2, y2, d):
-    return get_euclidean_distance_sq(x1, y1, x2, y2) <= d ** 2
+    return Util.get_euclidean_distance_sq(x1, y1, x2, y2) <= d ** 2
+
+if __name__ == "__main__":
+  print Util.get_euclidean_distance(0, 0, 3, 4)
