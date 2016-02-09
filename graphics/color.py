@@ -15,6 +15,9 @@ class Color:
 
   def __iter__(self):
     return self
+    
+  def __len__(self):
+    return len(self.color)
 
   @staticmethod
   def __hex_to_rgb__(hex_code):
@@ -41,5 +44,6 @@ class Color:
 
 if __name__ == "__main__":
   c = Color("#FFFC3F")
+  print len(c)
   for a in Color("ABCDEF"):
     print a

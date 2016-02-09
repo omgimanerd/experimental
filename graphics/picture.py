@@ -29,7 +29,7 @@ class Picture():
     Parameters:
     x: number, the x coordinate of the pixel to set
     y: number, the y coordinate of the pixel to set
-    color: [red, green, blue], the RGB color to set the pixel to
+    color: Color, the RGB color to set the pixel to
 
     Returns:
     None

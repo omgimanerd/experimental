@@ -25,7 +25,7 @@ class Drawing():
     Parameters:
     x: number, the x coordinate of the point to draw
     y: number, the y coordinate of the point to draw
-    color: [red, green, blue], the color to draw the point
+    color: Color, the color to draw the point
 
     Returns:
     None
@@ -41,7 +41,7 @@ class Drawing():
     y1: number, the y coordinate of one endpoint of the line
     x2: number, the x coordinate of the other endpoint of the line
     y2: number, the y coordinate of the other endpoint of the line
-    color: [red, green, blue], the color of the line
+    color: Color, the color of the line
     thickness: number, the thickness of the line in pixels
 
     Returns:
@@ -82,7 +82,7 @@ class Drawing():
     cx: number, the x coordinate of the center of the circle
     cy: number, the y coordinate of the center of the circle
     r: number, the radius of the circle in pixels
-    color: [red, green, blue], the color of the circle
+    color: Color, the color of the circle
     thickness: number, the thickness of the circle outline
 
     Returns:
@@ -99,7 +99,7 @@ class Drawing():
     cx: number, the x coordinate of the center of the circle
     cy: number, the y coordinate of the center of the circle
     r: number, the radius of the circle in pixels
-    color: [red, green, blue], the color of the circle
+    color: Color, the color of the circle
     
     Returns:
     None
