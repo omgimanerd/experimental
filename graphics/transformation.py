@@ -14,7 +14,7 @@ class Transformation():
     a: number, A in Ax + By + C = 0
     b: number, B in Ax + By + C = 0
     c: number, C in Ax + By + C = 0
-    line_color: [red, green, blue], the color of the line
+    line_color: Color, the color of the line
     thickness: number, the thickness of the line in pixels
 
     Returns:
@@ -34,7 +34,7 @@ class Transformation():
     cx: number, the x coordinate of the center of the circle
     cy: number, the y coordinate of the center of the circle
     r: number, the radius of the circle
-    circle_color: [red, green, blue], the color of the circle
+    circle_color: Color, the color of the circle
     thickness: number, the thickness in pixels of the outline of the circle
 
     Returns:
@@ -54,7 +54,7 @@ class Transformation():
     cx: number, the x coordinate of the center of the circle
     cy: number, the y coordinate of the center of the circle
     r: number, the radius of the circle
-    circle_color: [red, green, blue], the color of the circle
+    circle_color: Color, the color of the circle
 
     Returns:
     function()
