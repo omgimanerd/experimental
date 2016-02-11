@@ -1,5 +1,0 @@
-omgimanerd,0,1
-omgimanerd,1,1
-omgimanerd,1,1
-omgimanerd,1,1
-username,9,-1
