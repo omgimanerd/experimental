@@ -1,7 +1,6 @@
 #!/bin/bash
 
 confirm () {
-    # call with a prompt string or use a default
     read -r -p "${1:-Are you sure? [y/N]} " response
     case $response in
         [yY][eE][sS]|[yY]) 
@@ -25,8 +24,20 @@ install_flux () {
     sudo apt-get install fluxgui
 }
 
-# Install Git, Java, Chromium, Emacs, OpenSSH, python-dev, xclip, and libssl-dev
-confirm "Install Git, Java, Chromium, Emacs, OpenSSH, python-dev, xclip, and libssl-dev? [y/n]" && sudo apt-get install git default-jdk default-jre chromium-browser emacs24 openssh-server python-dev xclip libssl-dev
+# Install Git, Emacs, OpenSSH, python-dev, xclip, screen, make, and libssl-dev
+confirm "Install Git, Emacs, python-dev, xclip, screen, make, tkdiff, and libssl-dev? [y/n]" && sudo apt-get install git emacs24 python-dev xclip screen make tkdiff libssl-dev
+
+# Install Chromium
+confirm "Install Chromium? [y/n]" && sudo apt-get install chromium-browser
+
+# Install Gimp
+confirm "Install Gimp? [y/n]" && sudo apt-get install gimp
+
+# Install Java
+confirm "Install Java JRE and JDK? [y/n]" && sudo apt-get install default-jre default-jdk
+
+# Install OpenSSH client and server
+confirm "Install OpenSSH client and server? [y/n]" && sudo apt-get install openssh-client openssh-server
 
 # Install Node Version Manager
 confirm "Install NVM? [y/n]" && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
