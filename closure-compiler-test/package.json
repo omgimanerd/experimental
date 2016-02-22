@@ -1,0 +1,11 @@
+{
+  "name": "closure-compiler-test",
+  "version": "1.0.0",
+  "description": "A set of files to test Google's closure compiler.",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Alvin Lin (alvin.lin.dev@gmail.com)",
+  "license": "ISC"
+}
