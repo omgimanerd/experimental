@@ -1,11 +1,25 @@
 {
   "name": "closure-compiler-test",
   "version": "1.0.0",
-  "description": "A set of files to test Google's closure compiler.",
+  "description": "A set of scripts to test Google's closure compiler with gulp.",
   "main": "gulpfile.js",
+  "dependencies": {
+    "google-closure-compiler": "^20160208.1.0",
+    "gulp": "^3.9.1",
+    "gulp-gjslint": "^0.1.5"
+  },
+  "devDependencies": {},
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "gulp"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/omgimanerd/experimental.git"
   },
   "author": "Alvin Lin (alvin.lin.dev@gmail.com)",
-  "license": "ISC"
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/omgimanerd/experimental/issues"
+  },
+  "homepage": "https://github.com/omgimanerd/experimental#readme"
 }
