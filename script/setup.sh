@@ -24,8 +24,8 @@ install_flux () {
     sudo apt-get install fluxgui
 }
 
-# Install Git, Emacs, OpenSSH, python-dev, xclip, screen, make, and libssl-dev
-confirm "Install Git, Emacs, python-dev, xclip, screen, make, tkdiff, and libssl-dev? [y/n]" && sudo apt-get install git emacs24 python-dev xclip screen make tkdiff libssl-dev
+# Install Git, Emacs, OpenSSH, python-dev, python-pip, xclip, screen, make, and libssl-dev
+confirm "Install Git, Emacs, python-dev, python-pip, xclip, screen, make, tkdiff, and libssl-dev? [y/n]" && sudo apt-get install git emacs24 python-dev python-pip xclip screen make tkdiff libssl-dev
 
 # Install Chromium
 confirm "Install Chromium? [y/n]" && sudo apt-get install chromium-browser
