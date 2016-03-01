@@ -1,24 +1,38 @@
 /**
  * This class keeps track of the user input in global variables.
- * @author Alvin Lin (alvin.lin.dev@gmail.com)
+ * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
 /**
  * Empty constructor for the Input object.
- * @constructor
  */
-function Input() {}
+function Input() {
+  throw new Error('Input should not be instantiated!');
+}
 
+/** @type {boolean} */
 Input.LEFT_CLICK = false;
+/** @type {boolean} */
 Input.RIGHT_CLICK = false;
+/** @type {Object<string, Array<number>>} */
 Input.MOUSE = {};
 
+/** @type {boolean} */
 Input.LEFT = false;
+/** @type {boolean} */
 Input.UP = false;
+/** @type {boolean} */
 Input.RIGHT = false;
+/** @type {boolean} */
 Input.DOWN = false;
+/** @type {Object<number, boolean>} */
 Input.MISC_KEYS = {};
 
+/**
+ * This method is a callback bound to the onmousedown event on the document
+ * and updates the state of the mouse click stored in the Input class.
+ * @param {Event} e The event passed to this function.
+ */
 Input.onMouseDown = function(e) {
   if (e.which == 1) {
     Input.LEFT_CLICK = true;
@@ -27,6 +41,11 @@ Input.onMouseDown = function(e) {
   }
 };
 
+/**
+ * This method is a callback bound to the onmouseup event on the document and
+ * updates the state of the mouse click stored in the Input class.
+ * @param {Event} e The event passed to this function.
+ */
 Input.onMouseUp = function(e) {
   if (e.which == 1) {
     Input.LEFT_CLICK = false;
@@ -35,30 +54,41 @@ Input.onMouseUp = function(e) {
   }
 };
 
+/**
+ * This method is a callback bound to the onkeydown event on the document and
+ * updates the state of the keys stored in the Input class.
+ * @param {Event} e The event passed to this function.
+ */
 Input.onKeyDown = function(e) {
+  console.log(e);
   switch (e.keyCode) {
-  case 37:
-  case 65:
-    Input.LEFT = true;
-    break;
-  case 38:
-  case 87:
-    Input.UP = true;
-    break;
-  case 39:
-  case 68:
-    Input.RIGHT = true;
-    break;
-  case 40:
-  case 83:
-    Input.DOWN = true;
-    break;
-  default:
-    Input.MISC_KEYS[e.keyCode] = true;
-    break;
-  };
+    case 37:
+    case 65:
+      Input.LEFT = true;
+      break;
+    case 38:
+    case 87:
+      Input.UP = true;
+      break;
+    case 39:
+    case 68:
+      Input.RIGHT = true;
+      break;
+    case 40:
+    case 83:
+      Input.DOWN = true;
+      break;
+    default:
+      Input.MISC_KEYS[e.keyCode] = true;
+      break;
+  }
 };
 
+/**
+ * This method is a callback bound to the onkeyup event on the document and
+ * updates the state of the keys stored in the Input class.
+ * @param {Event} e The event passed to this function.
+ */
 Input.onKeyUp = function(e) {
   switch (e.keyCode) {
     case 37:
@@ -79,7 +109,7 @@ Input.onKeyUp = function(e) {
       break;
     default:
       Input.MISC_KEYS[e.keyCode] = false;
-  };
+  }
 };
 
 /**
@@ -87,12 +117,10 @@ Input.onKeyUp = function(e) {
  * class to track user input.
  */
 Input.applyEventHandlers = function() {
-  window.addEventListener("touchstart", Input.onTouchStart);
-  window.addEventListener("touchend", Input.onTouchEnd);
-  window.addEventListener("mousedown", Input.onMouseDown);
-  window.addEventListener("mouseup", Input.onMouseUp);
-  window.addEventListener("keyup", Input.onKeyUp);
-  window.addEventListener("keydown", Input.onKeyDown);
+  document.addEventListener('mousedown', Input.onMouseDown);
+  document.addEventListener('mouseup', Input.onMouseUp);
+  document.addEventListener('keyup', Input.onKeyUp);
+  document.addEventListener('keydown', Input.onKeyDown);
 };
 
 /**
@@ -105,9 +133,9 @@ Input.applyEventHandlers = function() {
  */
 Input.addMouseTracker = function(element, identifier) {
   if (Input.MOUSE[identifier]) {
-    throw new Exception("Non-unique identifier used!");
+    throw new Error('Non-unique identifier used!');
   }
-  element.addEventListener("mousemove", function(event) {
+  element.addEventListener('mousemove', function(event) {
     var boundingRect = element.getBoundingClientRect();
     Input.MOUSE[identifier] = [event.pageX - boundingRect.left,
                                event.pageY - boundingRect.top];

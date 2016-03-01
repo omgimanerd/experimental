@@ -3,56 +3,92 @@
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
  */
 
+// Dependencies
 var gulp = require('gulp');
 
-var autoprefixer = require('gulp-autoprefixer');
-var concat = require('gulp-concat');
-var closure = require('gulp-closure-compiler-service');
-var cssnano = require('gulp-cssnano');
+var lessAutoprefix = require('less-plugin-autoprefix');
+var compilerPackage = require('google-closure-compiler');
+var lessCleancss = require('less-plugin-clean-css');
+var gjslint = require('gulp-gjslint');
 var less = require('gulp-less');
+var path = require('path');
 var plumber = require('gulp-plumber');
 var rename = require('gulp-rename');
 
-gulp.task('default', ['js', 'less']);
+var closureCompiler = compilerPackage.gulp();
 
-gulp.task('js', function() {
-  return gulp.src(['./shared/*.js',
-                   './static/js/game/*.js',
-                   './static/js/*.js'])
-    .pipe(plumber())
-    .pipe(concat('minified.js'))
-    .pipe(closure({
-      compilation_level: 'SIMPLE_OPTIMIZATIONS'
+gulp.task('default', ['js-lint', 'js-compile', 'less']);
+
+gulp.task('js', ['js-lint', 'js-compile']);
+
+gulp.task('lint', ['js-lint']);
+
+gulp.task('js-lint', function() {
+  return gulp.src(['./extern/*.js',
+                   './shared/*.js',
+                   './public/js/**/*.js' ])
+    .pipe(gjslint({
+      flags: ['--jslint_error indentation',
+              '--jslint_error well_formed_author',
+              '--jslint_error braces_around_type',
+              '--jslint_error unused_private_members',
+              '--jsdoc',
+              '--max_line_length 80',
+              '--error_trace'
+             ]
     }))
-    .pipe(gulp.dest('./static/dist'));
+    .pipe(gjslint.reporter('console'));
+});
+
+gulp.task('js-compile', function() {
+  var basePath = path.dirname(__filename);
+
+  return gulp.src(['./shared/*.js',
+                   './public/js/**/*.js' ])
+    .pipe(plumber())
+    .pipe(closureCompiler({
+      externs: [
+        compilerPackage.compiler.CONTRIB_PATH + '/externs/jquery-1.9.js',
+        basePath + '/extern/extern.js'
+      ],
+      warning_level: 'VERBOSE',
+      compilation_level: 'ADVANCED_OPTIMIZATIONS',
+      js_output_file: 'minified.js'
+    }))
+    .pipe(gulp.dest('./public/dist'));
 });
 
 gulp.task('less', function() {
-  return gulp.src('./static/less/styles.less')
+  var autoprefix = new lessAutoprefix({
+    browsers: ["last 2 versions"]
+  });
+  var cleancss = new lessCleancss({
+    advanced: true
+  });
+
+  return gulp.src('./public/less/styles.less')
     .pipe(plumber())
-    .pipe(less({ compress: true}))
-    .pipe(autoprefixer())
-    .pipe(cssnano())
+    .pipe(less({
+      plugins: [autoprefix, cleancss]
+    }))
     .pipe(rename(function(path) {
       path.basename = 'minified';
       path.extname = '.css';
     }))
-    .pipe(gulp.dest('./static/dist'));
+    .pipe(gulp.dest('./public/dist'));
 });
 
 gulp.task('watch-js', function() {
   gulp.watch(['./shared/*.js',
-              './static/js/*.js',
-              './static/js/game/*.js'], ['js']);
+              './public/js/**/*.js'], ['js-compile']);
 });
 
 gulp.task('watch-less', function() {
-  gulp.watch('./static/less/*.less', ['less']);
+  gulp.watch('./public/less/*.less', ['less']);
 });
 
 gulp.task('watch', function() {
   gulp.watch(['./shared/*.js',
-              './static/js/*.js',
-              './static/js/game/*.js'], ['js']);
-  gulp.watch('./static/less/*.less', ['less']);
+              './public/js/**/*.js'], ['js-compile']);
+  gulp.watch('./public/less/*.less', ['less']);
 });
