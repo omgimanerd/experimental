@@ -6,6 +6,7 @@ import random
 import re
 
 def main():
+  # Reads in arguments from the command line.
   argument_parser = argparse.ArgumentParser(description='Does gov homework.')
   argument_parser.add_argument('filename',
                                help='The file containing the chapter text dump')
@@ -22,6 +23,8 @@ def main():
                             chapter)
   section_end = re.search('Section\s*%s\s*Assessment' % args.section,
                           chapter)
+  if not section_begin or not section_end:
+    raise ValueError('Oh shit that section doesn\'t exist!')
   section = chapter[section_begin.start(): section_end.start()]
 
   # Removes all extraneous whitespace and symbols and separates the section
@@ -30,16 +33,14 @@ def main():
   section = section.replace('. . .', '')
   section = re.sub('\s+', ' ', section)
   section = filter(lambda x: x != '', section.split('. '))
-  print section
 
   # Filter out pertinent and useful sentences
+  checker = language_check.LanguageTool('en-US')
+  section = filter(lambda x: len(checker.check(x)) == 0, section)
 
   # Rejoin the list of sentences
   section = ' '.join(section).split('. ')
   print section
-
-  # # section = filter(lambda x: len(checker.check(x)) == 0, section)
-
 
 if __name__ == '__main__':
   main()
