@@ -4,10 +4,13 @@ import language_check
 import random
 import re
 
+FILENAME = "ch02.unlocked.txt"
+dirname = "raw/"
+
 if __name__ == '__main__':
   checker = language_check.LanguageTool('en-US')
 
-  with open("ch01.txt") as f:
+  with open(dirname + FILENAME) as f:
     chapter = f.read().strip()
 
   match_3 = re.search("S e c t i on\s+[4]", chapter)
@@ -22,5 +25,5 @@ if __name__ == '__main__':
   section = filter(lambda x: x != '', section)
 
   # section = filter(lambda x: len(checker.check(x)) == 0, section)
-  
+
   print ". ".join(section)
