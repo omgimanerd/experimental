@@ -39,8 +39,8 @@ def main():
   section = filter(lambda x: len(checker.check(x)) == 0, section)
 
   # Rejoin the list of sentences
-  section = ' '.join(section).split('. ')
-  print section
+  section = '. '.join(section)
+  print section + '.'
 
 if __name__ == '__main__':
   main()
