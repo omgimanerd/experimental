@@ -24,7 +24,7 @@ def main():
   section_end = re.search('Section\s*%s\s*Assessment' % args.section,
                           chapter)
   if not section_begin or not section_end:
-    raise ValueError('Oh shit that section doesn\'t exist!')
+    raise ValueError('Oh shit that section doesn\'t exist!', args.section, args.filename)
   section = chapter[section_begin.start(): section_end.start()]
 
   # Removes all extraneous whitespace and symbols and separates the section
