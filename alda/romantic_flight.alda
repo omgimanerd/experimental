@@ -1,0 +1,76 @@
+# Test alda file
+
+(tempo! 100)
+
+piano:
+  (key-signature "f+ c+ g+ d+ a+")
+
+  V1:
+  o4 b8 > c8
+  o5 e4 f100ms e100ms d4. f8
+  o5 d2.
+  o5 c4 < b4. > d8
+  o4 f2.
+  o5 c4 d4 f4
+  o4 b2./>d2./b2.
+  o5 e2./b4 > c100ms < b100ms > c4. d8
+  o5 f2./>c2.
+  o5 f4 g4 b4
+
+  o5 a50ms < b2./>g8 f8 f4 d4
+  o4 b8 > c8 c4. f8
+  o5 d8 c8 c4 f4/>f4
+  o3 b4 > c4 e4
+  o4 d4. f8 d4~2
+  o4 c4
+  o3 b4. > d8 < f4~2
+  o4 c4
+
+  o4 d4 c4/f4
+  o3 b2./>d2./g2./b8 < b8 > d8 < b8 > g8 < b8
+  o3 b4/>e4/g4/b4 c4./>c4. d8
+  o3 c2./>b4/>c2. < a2
+  o4 f4 g4 b4
+  o4 b2/>g8 f8 f4 < b4/>d4
+  o4 b4. > c8 f4
+
+  o4 e2./>d4 c2
+  o4 f8/<f8 > g8/<g8 > g2/<g2
+  o5 f8/<f8 > g8/<g8 > g2/<g2
+  o4 b8/>d8/f8 b8 < b2/>e2/g2
+  o4 b4 > c4 d4
+
+  V2:
+  r4
+  r4 r200ms r4 r4
+  o3 b2./>f2./b2.
+  o3 f4 b2/>f2
+  o3 b2.
+  o3 f4 b4 a4/>f4
+  o3 g2./>d2./g2.
+  o3 b2./>e2. r200ms
+  o3 a2./>f2.
+  o3 f2 < b4
+
+  o3 r50ms e8 b8 > e2
+  o3 g8 > d8 g4 g4
+  o3 e8 b8 e2
+  o3 r4 r8 a4 f8
+  o2 b8 > f8 b2~2
+  o3 f4/<f4
+  o2 b2/<f2.~2./<b2.~2. b4~2
+  o3 f4/<f4
+
+  o3 b4/f4/<b4 > a4/<a4
+  o2 g8 > d8 g8 d8 b8 d8
+  o2 e8 b8 > e8 < b8 > g8 < b8
+  o2 f2./>c2./>f2.
+  o2 f4/>f4 < f8 > f8 g8 b8
+  o2 e8 b8 > e8 g8 e4
+  o2 g8 > d8 g8 g8 > d4
+
+  o2 e8 b8 > e2
+  o2 e8 b8 > e2
+  o2 d8/b8/>d8 < e8/b8/>e8 < e2/b2/>e2
+  o3 d8/b8 > d8 < e2/b2/>e2
+  o2 e4/>e4 < e4/>e4 < d4/>d4
