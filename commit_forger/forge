@@ -3,5 +3,4 @@
 echo "test" | cat >> dump
 echo "--date "\"$@\"
 git add .
-git commit -m "dump"
-git commit --amend --date \"$@\"
+git commit -m "dump" --date "$@"
