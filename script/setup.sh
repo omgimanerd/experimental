@@ -50,3 +50,7 @@ confirm "Install MongoDB? [y/n]" && install_mongo
 
 # Install f.lux
 confirm "Install f.lux? [y/n]" && install_flux
+
+git config --global user.name "omgimanerd"
+git config --global user.email "alvin.lin.dev@gmail.com"
+git config --global push.default simple
