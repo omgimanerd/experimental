@@ -19,16 +19,25 @@ def main():
     chapter = f.read().strip()
 
   # Isolates a single section of to summarize.
-  section_begin = re.search('S\s*e\s*c\s*t\s*i\s*o\s*n\s*%s' % args.section,
-                            chapter)
-  section_end = re.search('Section\s*%s\s*Assessment' % args.section,
-                          chapter)
-  if not section_begin or not section_end:
-    raise ValueError('Oh shit that section doesn\'t exist!', args.section, args.filename)
-  section = chapter[section_begin.start(): section_end.start()]
+  section_begin_regex = re.search(
+    '[sS]\s*[eE]\s*[cC]\s*[tT]\s*[iI]\s*[oO]\s*[nN]\s*%s' % args.section,
+    chapter)
+  section_end_regex = re.search(
+    '[sS]\s*[eE]\s*[cC]\s*[tT]\s*[iI]\s*[oO]\s*[nN]\s*%s' % (args.section + 1),
+    chapter)
+  if not section_begin_regex:
+    raise ValueError('Could not find beginning of section')
+  else:
+    section_begin = section_begin_regex.start()
+
+  if not section_end_regex:
+    section_end = len(chapter) - 1
+  else:
+    section_end = section_end_regex.start()
 
   # Removes all extraneous whitespace and symbols and separates the section
   # into a list of sentences.
+  section = chapter[section_begin:section_end]
   section = re.sub("[^\w\s .'\"!,()]", '', section)
   section = section.replace('. . .', '')
   section = re.sub('\s+', ' ', section)
@@ -37,6 +46,7 @@ def main():
   # Filter out pertinent and useful sentences
   checker = language_check.LanguageTool('en-US')
   section = filter(lambda x: len(checker.check(x)) == 0, section)
+  section = filter(lambda x: re.search("[A-Z]{3,}", x) is None, section)
 
   # Rejoin the list of sentences
   section = '. '.join(section)
