@@ -18,4 +18,5 @@ sudo pip install --upgrade language-check
 ```
 
 ## Creators
-Alvin Lin
+  - omgimanerd (Alvin Lin)
+  - bleepbloopsify (Leon Chou)
