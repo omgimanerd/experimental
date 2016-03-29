@@ -23,8 +23,8 @@ def main():
     '[sS]\s*[eE]\s*[cC]\s*[tT]\s*[iI]\s*[oO]\s*[nN]\s*%s' % args.section,
     chapter)
   section_end_regex = re.search(
-    '[sS]\s*[eE]\s*[cC]\s*[tT]\s*[iI]\s*[oO]\s*[nN]\s*%s' % (args.section + 1),
-    chapter)
+    '[sS]\s*[eE]\s*[cC]\s*[tT]\s*[iI]\s*[oO]\s*[nN]\s*%s Assessment' % (
+    args.section), chapter)
   if not section_begin_regex:
     raise ValueError('Could not find beginning of section')
   else:
