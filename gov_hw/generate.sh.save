@@ -1,0 +1,5 @@
+#!/bin/bash
+
+read -p Which chapter?
+
+eqfor i in 'swqpython generate.py 
