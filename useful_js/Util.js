@@ -60,6 +60,19 @@ Util.getManhattanDistance = function(x1, y1, x2, y2) {
 };
 
 /**
+ * This method linearly scales a number from one range to another.
+ * @param {number} x The number to scale.
+ * @param {number} a1 The lower bound of the range to scale from.
+ * @param {number} a2 The upper bound of the range to scale from.
+ * @param {number} b1 The lower bound of the range to scale to.
+ * @param {number} b2 The upper bound of the range to scale to.
+ * @return {number}
+ */
+Util.linearScale = function(x, a1, a2, b1, b2) {
+  return ((x - a1) * (b2 - b1) / (a2 - a1)) + b1;
+};
+
+/**
  * Returns the squared Euclidean distance between two points given their
  * x and y coordinates.
  * @param {number} x1 The x-coordinate of the first point.
@@ -158,11 +171,8 @@ Util.choiceArray = function(array) {
   return array[Util.randRangeInt(0, array.length)];
 };
 
-try {
-  /**
-   * This line is needed on the server side so that other modules can use the
-   * Util class, but since module does not exist in the client side, we enclose
-   * this in a try catch block to catch and suppress that error.
-   */
-  module.exports = Util;
-} catch (err) {}
+if (typeof module === 'object') {
+  module.exports = Constants;
+} else {
+  window.Constants = Constants;
+}
