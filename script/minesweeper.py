@@ -9,17 +9,17 @@ import random
 BUTTON_WIDTH = 36
 BUTTON_HEIGHT = 29
 
-class MineSweeper(Frame):
+class MineSweeper():
 
     def __init__(self, rows, cols, root, buttons, textvariables, grid,
-                 master=None):
-        Frame.__init__(self, master)
+                 resetButton, master=None):
         self.rows = rows
         self.cols = cols
         self.root = root
         self.buttons = buttons
         self.textvariables = textvariables
         self.grid = grid
+        self.resetButton = resetButton
 
     @staticmethod
     def create(rows, cols):
@@ -33,23 +33,31 @@ class MineSweeper(Frame):
                                rows)] for x in range(cols)]
         grid = [[-1 for y in range(rows)] for x in range(cols)]
 
-        num_mines = int(rows * cols * 0.15)
-        for i in range(num_mines):
-            x = random.randint(0, cols - 1)
-            y = random.randint(0, rows - 1)
-            while grid[x][y] == "M":
-                x = random.randint(0, cols - 1)
-                y = random.randint(0, rows - 1)
-            grid[random.randint(0, cols - 1)][random.randint(0, rows - 1)] = "M"
+        resetButton = Button(root, text="Reset")
 
-        quitButton = Button(root, text="Quit", command=root.quit)
-        quitButton.grid(row=cols+1, columnspan=cols)
-
-        m = MineSweeper(rows, cols, root, buttons, textvariables, grid)
-        m.setup_buttons()
+        m = MineSweeper(rows, cols, root, buttons, textvariables, grid,
+                        resetButton)
+        m._reset()
+        m._setup_buttons()
         return m
 
-    def setup_buttons(self):
+    def _reset(self):
+        num_mines = int(self.rows * self.cols * 0.15)
+        self.grid = [[-1 for y in range(self.rows)] for x in range(self.cols)]
+        for i in range(num_mines):
+            x = random.randint(0, self.cols - 1)
+            y = random.randint(0, self.rows - 1)
+            while self.grid[x][y] == "M":
+                x = random.randint(0, self.cols - 1)
+                y = random.randint(0, self.rows - 1)
+            self.grid[x][y] = "M"
+        for x in range(self.cols):
+            for y in range(self.rows):
+                self.textvariables[x][y].set("")
+
+    def _setup_buttons(self):
+        self.resetButton.grid(row=self.cols+1, columnspan=self.cols)
+        self.resetButton.config(command=self._reset)
         for x in range(self.cols):
             for y in range(self.rows):
                 # We reverse this because Python list of lists are weird and
