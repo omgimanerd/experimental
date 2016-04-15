@@ -42,7 +42,7 @@ class MineSweeper():
         return m
 
     def _reset(self):
-        num_mines = int(self.rows * self.cols * 0.15)
+        num_mines = int(self.rows * self.cols * 0.1)
         self.grid = [[-1 for y in range(self.rows)] for x in range(self.cols)]
         for i in range(num_mines):
             x = random.randint(0, self.cols - 1)
@@ -68,8 +68,7 @@ class MineSweeper():
     def _get_callback(self, x, y):
         def fn():
             if self.grid[x][y] == "M":
-                for i in range(100):
-                    print "You lost!"
+                self.textvariables[x][y].set("M")
             else:
                 self._propagate_click(x, y)
                 for i in range(self.cols):
@@ -83,15 +82,12 @@ class MineSweeper():
             return None
         mines = self._get_mines(x, y)
         self.grid[x][y] = mines
+        x_offset = [-1,  0,  1, 1, 1, 0, -1, -1]
+        y_offset = [-1, -1, -1, 0, 1, 1,  1,  0]
         if mines == 0:
-            if self._in_range(x, y - 1):
-                self._propagate_click(x, y - 1)
-            if self._in_range(x + 1, y):
-                self._propagate_click(x + 1, y)
-            if self._in_range(x, y + 1):
-                self._propagate_click(x, y + 1)
-            if self._in_range(x - 1, y):
-                self._propagate_click(x - 1, y)
+            for offset in zip(x_offset, y_offset):
+                if self._in_range(x + offset[0], y + offset[1]):
+                    self._propagate_click(x + offset[0], y + offset[1])
 
     def _get_mines(self, x, y):
         mines = 0
@@ -110,6 +106,10 @@ class MineSweeper():
         self.root.mainloop()
 
 if __name__ == '__main__':
-    app = MineSweeper.create(10, 15)
+    rows = 10
+    cols = 15
+    if len(sys.argv) == 3:
+        rows = int(sys.argv[1])
+        cols = int(sys.argv[2])
+    app = MineSweeper.create(rows, cols)
     app.run()
-
