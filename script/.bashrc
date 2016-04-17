@@ -133,5 +133,14 @@ alias show='gnome-open'
 export NVM_DIR="/home/omgimanerd/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
-### Added by the Heroku Toolbelt
+# Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+# Path variables
+export PATH="/home/omgimanerd/misc/arduino-1.6.8:/home/omgimanerd/experimental/script:$PATH"
+
+function sps() {
+  git stash;
+  git pull;
+  git stash pop;
+}
