@@ -1,3 +1,0 @@
-#!/bin/bash
-
-curl nycurl.sytes.net/$1
