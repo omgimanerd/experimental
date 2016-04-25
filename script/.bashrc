@@ -125,20 +125,28 @@ export PS1='\[\033[01;31m\]\h:\[\033[01;34m\]\w\[\033[0;32m\]$(__git_ps1 " [%s] 
 trap 'echo -ne "\e[0m"' DEBUG
 
 # Path variables
-export PATH="/home/omgimanerd/misc/arduino-1.6.8:/home/omgimanerd/experimental/script:$PATH"
+export PATH="/home/omgimanerd/misc/arduino-1.6.8:$PATH"
+export PATH="/home/omgimanerd/experimental/script:$PATH"
+export PATH="/usr/local/heroku/bin:$PATH"
+export PYTHONPATH="/home/omgimanerd/stuycs/graphics:$PYTHONPATH"
+
+# Added by NVM
+export NVM_DIR="/home/omgimanerd/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
 
 # Custom aliases
+alias show='gnome-open'
 alias windows='cd /media/omgimanerd/Windows8_OS/Users/omgimanerd'
 alias jc='javac *.java'
 alias fuck='sudo !!'
 
 # Custom functions
 function news() {
-  curl http://nycurl.sytes.net/$1
+  curl http://54.201.130.221/$1
 }
 
-function show() {
-  gnome-open $@
+function weather() {
+  curl http://wttr.in/$1
 }
 
 function sps() {
@@ -147,13 +155,3 @@ function sps() {
   git stash pop;
 }
 
-function weather() {
-  curl http://wttr.in/$1
-}
-
-# Added by NVM
-export NVM_DIR="/home/omgimanerd/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
-
-# Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
