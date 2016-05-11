@@ -117,12 +117,41 @@ GIT_PS1_SHOWDIRTYSTATE=1
 GIT_PS1_SHOWSTASHSTATE=1
 GIT_PS1_SHOWUNTRACKEDFILES=1
 
+stty -ixon
+
+# Shell prompt customization
 export PROMPT_COMMAND="history -a"
-export PATH=$PATH:~/node-v0.12.2
-export PATH=$PATH:~/processing-2.2.1
-export PATH=$PATH:~/android-studio/bin
-export PYTHONPATH=$PYTHONPATH:~/schoolyourself
 export PS1='\[\033[01;31m\]\h:\[\033[01;34m\]\w\[\033[0;32m\]$(__git_ps1 " [%s] ")\[\033[01;34m\]\$ \[\033[01;32m\]'
 trap 'echo -ne "\e[0m"' DEBUG
+
+# Path variables
+export PATH="/home/omgimanerd/misc/arduino-1.6.8:$PATH"
+export PATH="/home/omgimanerd/experimental/script:$PATH"
+export PATH="/usr/local/heroku/bin:$PATH"
+export PYTHONPATH="/home/omgimanerd/stuycs/graphics:$PYTHONPATH"
+
+# Added by NVM
+export NVM_DIR="/home/omgimanerd/.nvm"
+[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"  # This loads nvm
+
+# Custom aliases
+alias show='gnome-open'
 alias windows='cd /media/omgimanerd/Windows8_OS/Users/omgimanerd'
 alias jc='javac *.java'
+alias fuck='sudo !!'
+
+# Custom functions
+function news() {
+  curl http://54.201.130.221/$1
+}
+
+function weather() {
+  curl http://wttr.in/$1
+}
+
+function sps() {
+  git stash;
+  git pull;
+  git stash pop;
+}
+
