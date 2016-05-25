@@ -12,6 +12,15 @@ function Util() {
 }
 
 /**
+ * This method truncates a number to an integer.
+ * @param {number} x The number to truncate.
+ * @return {number}
+ */
+Util.truncate = function(x) {
+  return x | 0;
+};
+
+/**
  * This method returns the sign of a number.
  * @param {number} x The number to check.
  * @return {number}
@@ -172,7 +181,7 @@ Util.choiceArray = function(array) {
 };
 
 if (typeof module === 'object') {
-  module.exports = Constants;
+  module.exports = Util;
 } else {
-  window.Constants = Constants;
+  window.Constants = Util;
 }
