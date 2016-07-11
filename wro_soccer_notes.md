@@ -6,6 +6,34 @@ All robots must have (1) compass and (1) infrared seeker sensors. A light switch
 ## Strategy
 "Strategy", per se, is unfeasible due to the randomness factor in the game. Our goal is to use a subroutine optimized to keep the ball on the other side of the field as much as possible. We simply move towards the ball if we are facing the opposing goal, or try to maneuver around it if we are facing our own goal.
 
+**Minutiae**:
+  - We believe that on the field, if we can either acquire the ball or push the opposing robot out of the way, it would be more advantageous to us to push the opposing robot out of the way.
+
+
+## Code Overview
+```
+Let IR be the value read by the infrared sensor, which can be a value from 0 through 9. The sensor returns 0 if the ball is not detected. The sensor returns a value from 1-9 depending on which zone the ball is detected in.
+
+Let LMOTOR be the power of the left motor, and RMOTOR be the power of the right motor.
+
+Let K be the scaling factor that affects how fast the robot will turn towards the ball.
+
+Let B be the base speed that the robot will move at.
+
+Let S be the shift parameter of the IR value.
+
+S = 5
+K = 80
+B = 100
+These values were chosen by experimentation and are only applied to SKT_Faker and kennyS. Tune these values to suit your own robots.
+
+LMOTOR = B + ((IR - S) * K)
+RMOTOR = B - ((IR - S) * K)
+```
+```
+We set S to 5 when we want our robot to drive directly towards the infrared ball. We set S to 3 or 7 when we want the robot to curve around the left/right side of the ball, respectively. We want the robot to drive directly towards the ball if we are facing the opposing goal. We want the robot to curve around the left/right side of the ball if we are facing our own goal. We could potentially use the ultrasonic sensor to determine if there is a wall/robot next to us and determine which way to turn.
+```
+
 ## Offense bot
   - Build
     - Build a kicker capable of being a WMD (questionably legal). This could possible use a nautilus cam and/or springs/rubber bands and/or crank sliders.
