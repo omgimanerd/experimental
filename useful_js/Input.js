@@ -1,5 +1,6 @@
 /**
- * This class keeps track of the user input in global variables.
+ * This class facilitates the tracking of user input, such as mouse clicks
+ * and button presses.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  */
 
@@ -31,12 +32,14 @@ Input.MISC_KEYS = {};
 /**
  * This method is a callback bound to the onmousedown event on the document
  * and updates the state of the mouse click stored in the Input class.
- * @param {Event} e The event passed to this function.
+ * @param {Event} event The event passed to this function.
  */
-Input.onMouseDown = function(e) {
-  if (e.which == 1) {
+Input.onMouseDown = function(event) {
+  if (event.which == 1) {
     Input.LEFT_CLICK = true;
-  } else if (e.which == 3) {
+  } else if (event.which == 3) {
+    // This may fail depending on the browser as right click handling is
+    // not universally supported.
     Input.RIGHT_CLICK = true;
   }
 };
@@ -46,10 +49,12 @@ Input.onMouseDown = function(e) {
  * updates the state of the mouse click stored in the Input class.
  * @param {Event} e The event passed to this function.
  */
-Input.onMouseUp = function(e) {
-  if (e.which == 1) {
+Input.onMouseUp = function(event) {
+  if (event.which == 1) {
     Input.LEFT_CLICK = false;
-  } else if (e.which == 3) {
+  } else if (event.which == 3) {
+    // This may fail depending on the browser as right click handling is
+    // not universally supported.
     Input.RIGHT_CLICK = false;
   }
 };
@@ -59,9 +64,8 @@ Input.onMouseUp = function(e) {
  * updates the state of the keys stored in the Input class.
  * @param {Event} e The event passed to this function.
  */
-Input.onKeyDown = function(e) {
-  console.log(e);
-  switch (e.keyCode) {
+Input.onKeyDown = function(event) {
+  switch (event.keyCode) {
     case 37:
     case 65:
       Input.LEFT = true;
@@ -79,7 +83,7 @@ Input.onKeyDown = function(e) {
       Input.DOWN = true;
       break;
     default:
-      Input.MISC_KEYS[e.keyCode] = true;
+      Input.MISC_KEYS[event.keyCode] = true;
       break;
   }
 };
@@ -87,10 +91,10 @@ Input.onKeyDown = function(e) {
 /**
  * This method is a callback bound to the onkeyup event on the document and
  * updates the state of the keys stored in the Input class.
- * @param {Event} e The event passed to this function.
+ * @param {Event} event The event passed to this function.
  */
-Input.onKeyUp = function(e) {
-  switch (e.keyCode) {
+Input.onKeyUp = function(event) {
+  switch (event.keyCode) {
     case 37:
     case 65:
       Input.LEFT = false;
@@ -108,7 +112,7 @@ Input.onKeyUp = function(e) {
       Input.DOWN = false;
       break;
     default:
-      Input.MISC_KEYS[e.keyCode] = false;
+      Input.MISC_KEYS[event.keyCode] = false;
   }
 };
 
@@ -136,8 +140,6 @@ Input.addMouseTracker = function(element, identifier) {
     throw new Error('Non-unique identifier used!');
   }
   element.addEventListener('mousemove', function(event) {
-    var boundingRect = element.getBoundingClientRect();
-    Input.MOUSE[identifier] = [event.pageX - boundingRect.left,
-                               event.pageY - boundingRect.top];
+    Input.MOUSE[identifier] = [event.offsetX, event.offsetY];
   });
 };
