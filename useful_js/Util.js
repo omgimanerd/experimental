@@ -2,6 +2,7 @@
  * @fileoverview This is a utility class containing utility methods used on the
  * server and client.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
+ * @version 3.0.0
  */
 
 /**
@@ -183,5 +184,5 @@ Util.choiceArray = function(array) {
 if (typeof module === 'object') {
   module.exports = Util;
 } else {
-  window.Constants = Util;
+  window.Util = Util;
 }

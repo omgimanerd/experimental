@@ -16,7 +16,7 @@ Input.LEFT_CLICK = false;
 /** @type {boolean} */
 Input.RIGHT_CLICK = false;
 /** @type {Object<string, Array<number>>} */
-Input.MOUSE = {};
+Input.MOUSE = [];
 
 /** @type {boolean} */
 Input.LEFT = false;
@@ -47,7 +47,7 @@ Input.onMouseDown = function(event) {
 /**
  * This method is a callback bound to the onmouseup event on the document and
  * updates the state of the mouse click stored in the Input class.
- * @param {Event} e The event passed to this function.
+ * @param {Event} event The event passed to this function.
  */
 Input.onMouseUp = function(event) {
   if (event.which == 1) {
@@ -61,8 +61,8 @@ Input.onMouseUp = function(event) {
 
 /**
  * This method is a callback bound to the onkeydown event on the document and
+ * @param {Event} event The event passed to this function.
  * updates the state of the keys stored in the Input class.
- * @param {Event} e The event passed to this function.
  */
 Input.onKeyDown = function(event) {
   switch (event.keyCode) {
@@ -119,27 +119,23 @@ Input.onKeyUp = function(event) {
 /**
  * This should be called during initialization to allow the Input
  * class to track user input.
+ * @param {Element} element The element to apply the event listener to.
  */
-Input.applyEventHandlers = function() {
-  document.addEventListener('mousedown', Input.onMouseDown);
-  document.addEventListener('mouseup', Input.onMouseUp);
-  document.addEventListener('keyup', Input.onKeyUp);
-  document.addEventListener('keydown', Input.onKeyDown);
+Input.applyEventHandlers = function(element) {
+  element.setAttribute('tabindex', 1);
+  element.addEventListener('mousedown', Input.onMouseDown);
+  element.addEventListener('mouseup', Input.onMouseUp);
+  element.addEventListener('keyup', Input.onKeyUp);
+  element.addEventListener('keydown', Input.onKeyDown);
 };
 
 /**
  * This should be called any time an element needs to track mouse coordinates
  * over it.
  * @param {Element} element The element to apply the event listener to.
- * @param {string} identifier A unique identifier which the mouse coordinates
- *   will be stored with. This identifier should be a global constant since it
- *   will be used to access the mouse coordinates.
  */
-Input.addMouseTracker = function(element, identifier) {
-  if (Input.MOUSE[identifier]) {
-    throw new Error('Non-unique identifier used!');
-  }
+Input.addMouseTracker = function(element) {
   element.addEventListener('mousemove', function(event) {
-    Input.MOUSE[identifier] = [event.offsetX, event.offsetY];
+    Input.MOUSE = [event.offsetX, event.offsetY];
   });
 };

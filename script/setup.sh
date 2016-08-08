@@ -47,7 +47,7 @@ confirm "Install Java JRE and JDK? [y/n]" && sudo apt-get install default-jre de
 confirm "Install OpenSSH client and server? [y/n]" && sudo apt-get install openssh-client openssh-server
 
 # Install Node Version Manager
-confirm "Install NVM? [y/n]" && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.0/install.sh | bash
+confirm "Install NVM? [y/n]" && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.3/install.sh | bash
 
 # Install MongoDB
 confirm "Install MongoDB? [y/n]" && install_mongo
