@@ -1,4 +1,5 @@
 #!/bin/bash
+# Ubuntu 14.04
 
 confirm () {
     read -r -p "${1:-Are you sure? [y/N]} " response
