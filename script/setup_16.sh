@@ -15,6 +15,9 @@ confirm () {
 
 confirm "Install Git, Emacs, python-dev, python-pip, screen, make, tkdiff? [y/n]" && sudo apt-get install git emacs24 python-dev python-pip screen make tkdiff
 
+# Install gnome-tweak-tool
+confirm "Install gnome-tweak-tool [y/n]" && sudo apt-get install gnome-tweak-tool
+
 # Install Gimp
 confirm "Install Gimp? [y/n]" && sudo apt-get install gimp
 
