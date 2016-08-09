@@ -16,7 +16,7 @@ confirm () {
 confirm "Install Git, Emacs, python-dev, python-pip, screen, make, tkdiff? [y/n]" && sudo apt-get install git emacs24 python-dev python-pip screen make tkdiff
 
 # Install gnome-tweak-tool
-confirm "Install gnome-tweak-tool [y/n]" && sudo apt-get install gnome-tweak-tool
+confirm "Install gnome-tweak-tool? [y/n]" && sudo apt-get install gnome-tweak-tool
 
 # Install Gimp
 confirm "Install Gimp? [y/n]" && sudo apt-get install gimp
@@ -33,5 +33,9 @@ confirm "Install Java JRE and JDK? [y/n]" && sudo apt-get install default-jre de
 # Install OpenSSH client and server
 confirm "Install OpenSSH client and server? [y/n]" && sudo apt-get install openssh-client openssh-server
 
+# Install MuseScore
+confirm "Install musescore? [y/n]" && sudo apt-get install musescore
+
 # Install Node Version Manager
 confirm "Install NVM? [y/n]" && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.3/install.sh | bash
+
