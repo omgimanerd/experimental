@@ -2,15 +2,15 @@
 # Ubuntu 14.04
 
 confirm () {
-    read -r -p "${1:-Are you sure? [y/N]} " response
-    case $response in
-        [yY][eE][sS]|[yY]) 
-            true
-            ;;
-        *)
-            false
-            ;;
-    esac
+  read -r -p "${1:-Are you sure? [y/N]} " response
+  case $response in
+      [yY][eE][sS]|[yY])
+          true
+          ;;
+      *)
+          false
+          ;;
+  esac
 }
 
 confirm "Install Git, Emacs, python-dev, python-pip, screen, make, tkdiff? [y/n]" && sudo apt-get install git emacs24 python-dev python-pip screen make tkdiff
