@@ -1,12 +1,13 @@
 /**
- * @fileoverview This is a utility class containing utility methods used on the
- * server and client.
+ * This is a utility class containing utility methods used on the server and
+ * client.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
  * @version 3.0.0
  */
 
 /**
  * Empty constructor for the Util class, all functions will be static.
+ * @constructor
  */
 function Util() {
   throw new Error('Util should not be instantiated!');
@@ -67,19 +68,6 @@ Util.generateUID = function(length) {
  */
 Util.getManhattanDistance = function(x1, y1, x2, y2) {
   return Math.abs(x1 - x2) + Math.abs(y1 - y2);
-};
-
-/**
- * This method linearly scales a number from one range to another.
- * @param {number} x The number to scale.
- * @param {number} a1 The lower bound of the range to scale from.
- * @param {number} a2 The upper bound of the range to scale from.
- * @param {number} b1 The lower bound of the range to scale to.
- * @param {number} b2 The upper bound of the range to scale to.
- * @return {number}
- */
-Util.linearScale = function(x, a1, a2, b1, b2) {
-  return ((x - a1) * (b2 - b1) / (a2 - a1)) + b1;
 };
 
 /**
@@ -173,16 +161,22 @@ Util.randRangeInt = function(min, max) {
 
 /**
  * Returns a random element in a given array.
- * @param {Array.<*>} array The array from which to select a random
+ * @param {Array.<Object>} array The array from which to select a random
  *   element from.
- * @return {*}
+ * @return {Object}
  */
 Util.choiceArray = function(array) {
   return array[Util.randRangeInt(0, array.length)];
 };
 
 if (typeof module === 'object') {
+  /**
+   * If Util is loaded as a Node module, then this line is called.
+   */
   module.exports = Util;
 } else {
+  /**
+   * If Util is loaded into the browser, then this line is called.
+   */
   window.Util = Util;
 }
