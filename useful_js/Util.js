@@ -2,7 +2,6 @@
  * This is a utility class containing utility methods used on the server and
  * client.
  * @author alvin.lin.dev@gmail.com (Alvin Lin)
- * @version 3.0.0
  */
 
 /**
@@ -34,27 +33,6 @@ Util.getSign = function(x) {
     return -1;
   }
   return 0;
-};
-
-/**
- * Generates and returns a UID.
- * @param {?number=} length An optional length parameter for the UID to
- *   to generate. If the length is not provided, this function will return a
- *   UID of length 32.
- * @return {string}
- */
-Util.generateUID = function(length) {
-  if (!length) {
-    length = 32;
-  }
-  var choice = 'abcdefghijklmnopqrstuvwxyz' +
-               'ABCDEFGHIJKLMNOPQRSTUVWXYZ' +
-               '1234567890';
-  var uid = '';
-  for (var i = 0; i < length; ++i) {
-    uid += choice.charAt(Math.floor(Math.random() * choice.length));
-  }
-  return uid;
 };
 
 /**
