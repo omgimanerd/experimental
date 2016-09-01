@@ -17,6 +17,7 @@
   split_vert = <Ctrl>S
   zoom_in = <Ctrl>equal
   zoom_out = <Ctrl>minus
+  reset_clear = <Ctrl>L
 [layouts]
   [[default]]
     [[[child1]]]

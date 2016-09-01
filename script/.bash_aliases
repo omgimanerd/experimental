@@ -8,7 +8,9 @@ export PS1='\[\033[01;31m\]\h:\[\033[01;34m\]\w\[\033[0;32m\]$(__git_ps1 " [%s] 
 trap 'echo -ne "\e[0m"' DEBUG
 
 # Custom aliases
+alias python='python3'
 alias show='gnome-open'
+alias sl='ls'
 alias windows='cd /media/omgimanerd/Windows8_OS/Users/omgimanerd'
 
 # Custom functions
