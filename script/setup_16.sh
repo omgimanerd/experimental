@@ -19,7 +19,7 @@ confirm "Install Git, Emacs, python-dev, python-pip, screen, make, tkdiff? [y/n]
 confirm "Install gnome-tweak-tool? [y/n]" && sudo apt-get install gnome-tweak-tool
 
 # Install compizconfig-settings-manager
-confirm "Install compizconfig-settings-manager? [y/n]" && sudo apt-get install compizconfig-settings-manager
+confirm "Install compizconfig-settings-manager? [y/n]" && sudo apt-get install compizconfig-settings-manager compiz-plugins
 
 # Install Gimp
 confirm "Install Gimp? [y/n]" && sudo apt-get install gimp
