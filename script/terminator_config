@@ -1,6 +1,7 @@
 [global_config]
   focus = system
   suppress_multiple_term_dialog = True
+  title_font = Sans 15
 [keybindings]
   close_term = <Ctrl>W
   close_window = <Ctrl>Q
@@ -9,15 +10,15 @@
   go_right = <Ctrl>L
   go_up = <Ctrl>I
   new_tab = <Ctrl>T
+  new_terminator = <Ctrl>N
   next_tab = <Ctrl>O
   prev_tab = <Ctrl>U
-  new_terminator = <Ctrl>N
+  reset_clear = <Ctrl><Shift>L
   search = <Ctrl>F
   split_horiz = <Ctrl>E
   split_vert = <Ctrl>S
   zoom_in = <Ctrl>equal
   zoom_out = <Ctrl>minus
-  reset_clear = <Ctrl>L
 [layouts]
   [[default]]
     [[[child1]]]
@@ -30,3 +31,7 @@
 [profiles]
   [[default]]
     background_image = None
+    copy_on_selection = True
+    font = Ubuntu Mono 15
+    scrollback_infinite = True
+    use_system_font = False
