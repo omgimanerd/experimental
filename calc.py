@@ -6,26 +6,26 @@ def delta_x(a, b, n):
     return (b - a) / n
 
 def left_riemann_sum(f, a, b, n):
-    interval = linspace(a, b, n + 1, endpoint=False)
+    interval = list(linspace(a, b, n + 1, endpoint=False))
     return (interval, delta_x(a, b, n) * sum([f(x) for x in interval]))
 
 def right_riemann_sum(f, a, b, n):
-    interval = linspace(a, b, n + 1)[1:]
+    interval = list(linspace(a, b, n + 1)[1:])
     return (interval, delta_x(a, b, n) * sum([f(x) for x in interval]))
 
 def midpoint_approximation(f, a, b, n):
     delta = delta_x(a, b, n)
-    interval = arange(a + (delta / 2), b, delta)
+    interval = list(arange(a + (delta / 2), b, delta))
     return (interval, delta * sum([f(x) for x in interval]))
 
 def trapezoidal_approximation(f, a, b, n):
-    interval = linspace(a, b, n + 1)
+    interval = list(linspace(a, b, n + 1))
     return (interval,
             (left_riemann_sum(f, a, b, n)[1] + right_riemann_sum(f, a, b, n)[1]) / 2)
 
 def simpsons_rule_approximation(f, a, b, n):
     series = linspace(a, b, n + 1)
-    interval = series
+    interval = list(linspace(a, b, n + 1))
     for index, term in enumerate(series):
         if index == 0 or index == len(series) - 1:
             series[index] = f(term)
