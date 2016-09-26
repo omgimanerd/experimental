@@ -16,7 +16,7 @@ def right_riemann_sum(f, a, b, n):
 def midpoint_approximation(f, a, b, n):
     delta = delta_x(a, b, n)
     return delta * sum(
-        [f(x) for x in arange(delta / 2, b, delta)])
+        [f(x) for x in arange(a + (delta / 2), b, delta)])
 
 def trapezoidal_approximation(f, a, b, n):
     return (left_riemann_sum(f, a, b, n) + right_riemann_sum(f, a, b, n)) / 2
