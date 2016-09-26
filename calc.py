@@ -6,7 +6,7 @@ def delta_x(a, b, n):
     return (b - a) / n
 
 def left_riemann_sum(f, a, b, n):
-    interval = list(linspace(a, b, n + 1, endpoint=False))
+    interval = list(linspace(a, b, n, endpoint=False))
     return (interval, delta_x(a, b, n) * sum([f(x) for x in interval]))
 
 def right_riemann_sum(f, a, b, n):
