@@ -1,15 +1,16 @@
 /**
  * Multipurpose Javascript Task Runner to compile my projects.
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
- * @version 2.1.0
+ * @version 3.0.0
  */
 
-const version = "2.1.0";
+const version = "3.0.0";
 
 var semver = require('semver');
 
 var gulp = require('gulp');
 var merge = require('merge-stream');
+var path = require('path');
 
 try {
   var BUILD = require('./BUILD');
@@ -20,7 +21,7 @@ try {
         'it as certain features may not work.');
   }
 } catch (error) {
-  throw new Error('Unable to locate BUILD.js');
+  throw new Error('Unable to read BUILD.js');
 }
 
 gulp.task('default', BUILD.DEFAULT_TASKS || ['js', 'less', 'sass']);
@@ -29,6 +30,20 @@ gulp.task('js', ['js-lint', 'js-compile']);
 
 gulp.task('lint', ['js-lint']);
 
+gulp.task('scss', ['sass']);
+
+/**
+ * Example rule:
+ * JS_LINT_RULES: [
+ *   {
+ *     name: 'rule name',
+ *     sourceFiles: [
+ *       '/path/to/file1',
+ *       '/path/to/file2'
+ *     ]
+ *   }
+ * ]
+ */
 gulp.task('js-lint', function() {
   if (BUILD.JS_LINT_RULES) {
     var gjslint = require('gulp-gjslint');
@@ -56,20 +71,38 @@ gulp.task('js-lint', function() {
   }
 });
 
+/**
+ * Example rule:
+ * JS_BUILD_RULES: [
+ *   {
+ *     name: 'rule name',
+ *     externs: [
+ *       'path/to/externs'
+ *     ],
+ *     compilationLevel: 'SIMPLE_OPTIMIZATIONS/ADVANCED_OPTIMIZATIONS',
+ *     sourceFiles: [
+ *       '/path/to/file1',
+ *       '/path/to/file2'
+ *     ],
+ *     outputFile: [
+ *       '/path/to/outputFile'
+ *     ]
+ *   }
+ * ]
+ */
 gulp.task('js-compile', function() {
   if (BUILD.JS_BUILD_RULES) {
-    var path = require('path');
     var compilerPackage = require('google-closure-compiler');
     var plumber = require('gulp-plumber');
 
     var closureCompiler = compilerPackage.gulp();
     var getClosureCompilerConfiguration = function(externs, compilationLevel,
-                                                   outputFile) {
+                                                   filename) {
       return closureCompiler({
         externs: externs,
         warning_level: 'VERBOSE',
         compilation_level: compilationLevel,
-        js_output_file: outputFile
+        js_output_file: filename
       });
     };
 
@@ -78,8 +111,8 @@ gulp.task('js-compile', function() {
         .pipe(plumber())
         .pipe(getClosureCompilerConfiguration(rule.externs,
                                               rule.compilationLevel,
-                                              rule.outputFile))
-        .pipe(gulp.dest(rule.outputDirectory))
+                                              path.basename(rule.outputFile)))
+        .pipe(gulp.dest(path.dirname(rule.outputFile)))
         .on('end', function() {
           console.log('Finished compiling ' + rule.name + ' with ' +
               rule.compilationLevel);
@@ -90,6 +123,21 @@ gulp.task('js-compile', function() {
   }
 });
 
+/**
+ * Example rule:
+ * LESS_BUILD_RULES: [
+ *   {
+ *     name: 'rule name',
+ *     sourceFiles: [
+ *       '/path/to/file1',
+ *       '/path/to/file2'
+ *     ],
+ *     outputFile: [
+ *       '/path/to/outputFile'
+ *     ]
+ *   }
+ * ]
+ */
 gulp.task('less', function() {
   if (BUILD.LESS_BUILD_RULES) {
     var less = require('gulp-less');
@@ -114,8 +162,8 @@ gulp.task('less', function() {
       return gulp.src(rule.sourceFiles)
         .pipe(plumber())
         .pipe(getLessConfiguration())
-        .pipe(rename(rule.outputFile))
-        .pipe(gulp.dest(rule.outputDirectory))
+        .pipe(rename(path.basename(rule.outputFile)))
+        .pipe(gulp.dest(path.dirname(rule.outputFile)))
         .on('end', function() {
           console.log('Finished compiling ' + rule.name);
         });
@@ -125,6 +173,21 @@ gulp.task('less', function() {
   }
 });
 
+/**
+ * Example rule:
+ * SASS_BUILD_RULES: [
+ *   {
+ *     name: 'rule name',
+ *     sourceFiles: [
+ *       '/path/to/file1',
+ *       '/path/to/file2'
+ *     ],
+ *     outputFile: [
+ *       '/path/to/outputFile'
+ *     ]
+ *   }
+ * ]
+ */
 gulp.task('sass', function() {
   if (BUILD.SASS_BUILD_RULES) {
     var sass = require('gulp-sass');
@@ -137,8 +200,8 @@ gulp.task('sass', function() {
         .pipe(sass({
           outputStyle: 'compressed'
         }))
-        .pipe(rename(rule.outputFile))
-        .pipe(gulp.dest(rule.outputDirectory))
+        .pipe(rename(path.basename(rule.outputFile)))
+        .pipe(gulp.dest(path.dirname(rule.outputFile)))
         .on('end', function() {
           console.log('Finished compiling ' + rule.name);
         })
@@ -148,10 +211,16 @@ gulp.task('sass', function() {
   }
 });
 
+/**
+ * Sample rule:
+ * CLEAN_PROJECT_PATHS: [
+ *   'path/to/dir'
+ * ]
+ */
 gulp.task('clean', function() {
   if (BUILD.CLEAN_PROJECT_PATHS) {
     var del = require('del');
-    return del(BUILD.CLEAN_PROJECT_RULES).then(function(paths) {
+    return del(BUILD.CLEAN_PROJECT_PATHS).then(function(paths) {
       console.log('Cleaned:\n' + paths.join('\n'));
     });
   } else {
@@ -159,6 +228,12 @@ gulp.task('clean', function() {
   }
 });
 
+/**
+ * Sample rule:
+ * JASMINE_TEST_PATHS: [
+ *   '/path/to/tests'
+ * ]
+ */
 gulp.task('test', function() {
   if (BUILD.JASMINE_TEST_PATHS) {
     var jasmine = require('gulp-jasmine');
@@ -176,6 +251,8 @@ gulp.task('watch-js', function() {
     BUILD.JS_BUILD_RULES.map(function(rule) {
       gulp.watch(rule.sourceFiles, ['js'])
     });
+  } else {
+    console.warn('JS_BUILD_RULES are not defined in your BUILD.js');
   }
 });
 
@@ -184,15 +261,22 @@ gulp.task('watch-less', function() {
     BUILD.LESS_BUILD_RULES.map(function(rule) {
       gulp.watch(rule.sourceFiles, ['less']);
     });
+  } else {
+    console.warn('LESS_BUILD_RULES are not defined in your BUILD.js');
   }
 });
+
+gulp.task('watch-scss', ['watch-sass']);
 
 gulp.task('watch-sass', function() {
   if (BUILD.SASS_BUILD_RULES) {
     BUILD.SASS_BUILD_RULES.map(function(rule) {
       gulp.watch(rule.sourceFiles, ['sass']);
     });
+  } else {
+    console.warn('SASS_BUILD_RULES are not defined in your BUILD.js');
   }
 });
 
-gulp.task('watch', ['watch-js', 'watch-less', 'watch-sass']);
+gulp.task('watch',
+          BUILD.DEFAULT_WATCH || ['watch-js', 'watch-less', 'watch-sass']);
