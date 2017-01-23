@@ -13,7 +13,7 @@ confirm () {
   esac
 }
 
-confirm "Install Git, Emacs, python-dev, python-pip, screen, make, tkdiff? [y/n]" && sudo apt-get install git emacs24 python-dev python-pip screen make tkdiff
+confirm "Install Git, Emacs, python-dev, python-pip, screen, make, tkdiff, terminator? [y/n]" && sudo apt-get install git emacs24 python-dev python-pip python3-pip screen make tkdiff terminator
 
 # Install gnome-tweak-tool
 confirm "Install gnome-tweak-tool? [y/n]" && sudo apt-get install gnome-tweak-tool
