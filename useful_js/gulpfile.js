@@ -1,10 +1,10 @@
 /**
  * Multipurpose Javascript Task Runner to compile my projects.
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
- * @version 3.0.0
+ * @version 3.1.0
  */
 
-const version = "3.0.0";
+const version = "3.1.0";
 
 var semver = require('semver');
 
@@ -13,15 +13,15 @@ var merge = require('merge-stream');
 var path = require('path');
 
 try {
-  var BUILD = require('./BUILD');
+  var BUILD = require('./BUILD.json');
   if (semver.gt(BUILD.GULPFILE_VERSION, version)) {
     console.warn('Your gulpfile.js is outdated and may not work properly!');
   } else if (semver.gt(version, BUILD.GULPFILE_VERSION)) {
-    console.warn('Your BUILD.js is using an older format. Consider updating ' +
-        'it as certain features may not work.');
+    console.warn('Your BUILD.js is using an older format.');
+    console.warn('Consider updating it as certain features may not work.');
   }
 } catch (error) {
-  throw new Error('Unable to read BUILD.js');
+  throw new Error('Unable to read BUILD.json');
 }
 
 gulp.task('default', BUILD.DEFAULT_TASKS || ['js', 'less', 'sass']);
@@ -84,9 +84,7 @@ gulp.task('js-lint', function() {
  *       '/path/to/file1',
  *       '/path/to/file2'
  *     ],
- *     outputFile: [
- *       '/path/to/outputFile'
- *     ]
+ *     outputFile: '/path/to/outputFile'
  *   }
  * ]
  */
@@ -132,9 +130,7 @@ gulp.task('js-compile', function() {
  *       '/path/to/file1',
  *       '/path/to/file2'
  *     ],
- *     outputFile: [
- *       '/path/to/outputFile'
- *     ]
+ *     outputFile: '/path/to/outputFile'
  *   }
  * ]
  */
@@ -150,12 +146,8 @@ gulp.task('less', function() {
       var autoprefix = new lessPluginAutoprefix({
         browsers: ["last 2 versions"]
       });
-      var cleanCss = new lessPluginCleanCss({
-        advanced: true
-      });
-      return less({
-        plugins: [autoprefix, cleanCss]
-      });
+      var cleanCss = new lessPluginCleanCss({ advanced: true });
+      return less({ plugins: [autoprefix, cleanCss] });
     };
 
     return merge(BUILD.LESS_BUILD_RULES.map(function(rule) {
@@ -182,9 +174,7 @@ gulp.task('less', function() {
  *       '/path/to/file1',
  *       '/path/to/file2'
  *     ],
- *     outputFile: [
- *       '/path/to/outputFile'
- *     ]
+ *     outputFile: '/path/to/outputFile'
  *   }
  * ]
  */
@@ -197,9 +187,7 @@ gulp.task('sass', function() {
     return merge(BUILD.SASS_BUILD_RULES.map(function(rule) {
       return gulp.src(rule.sourceFiles)
         .pipe(plumber())
-        .pipe(sass({
-          outputStyle: 'compressed'
-        }))
+        .pipe(sass({ outputStyle: 'compressed' }))
         .pipe(rename(path.basename(rule.outputFile)))
         .pipe(gulp.dest(path.dirname(rule.outputFile)))
         .on('end', function() {
