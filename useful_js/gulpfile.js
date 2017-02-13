@@ -1,10 +1,10 @@
 /**
  * Multipurpose Javascript Task Runner to compile my projects.
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
- * @version 3.1.0
+ * @version 3.2.0
  */
 
-const version = "3.1.0";
+const version = "3.2.0";
 
 var semver = require('semver');
 
@@ -47,9 +47,7 @@ gulp.task('scss', ['sass']);
 gulp.task('js-lint', function() {
   if (BUILD.JS_LINT_RULES) {
     var gjslint = require('gulp-gjslint');
-
     return merge(BUILD.JS_LINT_RULES.map(function(rule) {
-      // Set default flags to be used for gulp-gjslint
       var flags = [
         '--jslint_error indentation',
         '--jslint_error well_formed_author',
@@ -67,7 +65,7 @@ gulp.task('js-lint', function() {
          });
     }));
   } else {
-    console.warn('JS_LINT_RULES are not defined in your BUILD.js');
+    console.warn('JS_LINT_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -92,7 +90,6 @@ gulp.task('js-compile', function() {
   if (BUILD.JS_BUILD_RULES) {
     var compilerPackage = require('google-closure-compiler');
     var plumber = require('gulp-plumber');
-
     var closureCompiler = compilerPackage.gulp();
     var getClosureCompilerConfiguration = function(externs, compilationLevel,
                                                    filename) {
@@ -103,7 +100,6 @@ gulp.task('js-compile', function() {
         js_output_file: filename
       });
     };
-
     return merge(BUILD.JS_BUILD_RULES.map(function(rule) {
       return gulp.src(rule.sourceFiles)
         .pipe(plumber())
@@ -117,7 +113,7 @@ gulp.task('js-compile', function() {
         });
     }));
   } else {
-    console.warn('JS_BUILD_RULES are not defined in your BUILD.js');
+    console.warn('JS_BUILD_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -141,7 +137,6 @@ gulp.task('less', function() {
     var rename = require('gulp-rename');
     var lessPluginAutoprefix = require('less-plugin-autoprefix');
     var lessPluginCleanCss = require('less-plugin-clean-css');
-
     var getLessConfiguration = function() {
       var autoprefix = new lessPluginAutoprefix({
         browsers: ["last 2 versions"]
@@ -149,7 +144,6 @@ gulp.task('less', function() {
       var cleanCss = new lessPluginCleanCss({ advanced: true });
       return less({ plugins: [autoprefix, cleanCss] });
     };
-
     return merge(BUILD.LESS_BUILD_RULES.map(function(rule) {
       return gulp.src(rule.sourceFiles)
         .pipe(plumber())
@@ -161,7 +155,7 @@ gulp.task('less', function() {
         });
     }));
   } else {
-    console.warn('LESS_BUILD_RULES are not defined in your BUILD.js');
+    console.warn('LESS_BUILD_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -183,7 +177,6 @@ gulp.task('sass', function() {
     var sass = require('gulp-sass');
     var plumber = require('gulp-plumber');
     var rename = require('gulp-rename');
-
     return merge(BUILD.SASS_BUILD_RULES.map(function(rule) {
       return gulp.src(rule.sourceFiles)
         .pipe(plumber())
@@ -195,7 +188,7 @@ gulp.task('sass', function() {
         })
     }));
   } else {
-    console.warn('SASS_BUILD_RULES are not defined in your BUILD.js');
+    console.warn('SASS_BUILD_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -212,7 +205,7 @@ gulp.task('clean', function() {
       console.log('Cleaned:\n' + paths.join('\n'));
     });
   } else {
-    console.warn('CLEAN_PROJECT_RULES are not defined in your BUILD.js');
+    console.warn('CLEAN_PROJECT_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -230,7 +223,7 @@ gulp.task('test', function() {
         console.log('Finished running unit tests');
       });
   } else {
-    console.warn('JASMINE_TEST_PATHS are not defined in your BUILD.js');
+    console.warn('JASMINE_TEST_PATHS are not defined in your BUILD.json');
   }
 });
 
@@ -240,7 +233,7 @@ gulp.task('watch-js', function() {
       gulp.watch(rule.sourceFiles, ['js'])
     });
   } else {
-    console.warn('JS_BUILD_RULES are not defined in your BUILD.js');
+    console.warn('JS_BUILD_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -250,7 +243,7 @@ gulp.task('watch-less', function() {
       gulp.watch(rule.sourceFiles, ['less']);
     });
   } else {
-    console.warn('LESS_BUILD_RULES are not defined in your BUILD.js');
+    console.warn('LESS_BUILD_RULES are not defined in your BUILD.json');
   }
 });
 
@@ -262,9 +255,8 @@ gulp.task('watch-sass', function() {
       gulp.watch(rule.sourceFiles, ['sass']);
     });
   } else {
-    console.warn('SASS_BUILD_RULES are not defined in your BUILD.js');
+    console.warn('SASS_BUILD_RULES are not defined in your BUILD.json');
   }
 });
 
-gulp.task('watch',
-          BUILD.DEFAULT_WATCH || ['watch-js', 'watch-less', 'watch-sass']);
+gulp.task('watch', BUILD.DEFAULT_WATCH || ['watch-less', 'watch-sass']);
