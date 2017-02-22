@@ -1,16 +1,15 @@
 /**
  * Multipurpose Javascript Task Runner to compile my projects.
  * @author Alvin Lin (alvin.lin.dev@gmail.com)
- * @version 3.2.0
+ * @version 3.2.1
  */
 
-const version = "3.2.0";
+const version = "3.2.1";
 
-var semver = require('semver');
-
-var gulp = require('gulp');
-var merge = require('merge-stream');
-var path = require('path');
+const gulp = require('gulp');
+const merge = require('merge-stream');
+const path = require('path');
+const semver = require('semver');
 
 try {
   var BUILD = require('./BUILD.json');
@@ -29,8 +28,6 @@ gulp.task('default', BUILD.DEFAULT_TASKS || ['js', 'less', 'sass']);
 gulp.task('js', ['js-lint', 'js-compile']);
 
 gulp.task('lint', ['js-lint']);
-
-gulp.task('scss', ['sass']);
 
 /**
  * Example rule:
@@ -159,6 +156,8 @@ gulp.task('less', function() {
   }
 });
 
+gulp.task('scss', ['sass']);
+
 /**
  * Example rule:
  * SASS_BUILD_RULES: [
@@ -227,10 +226,22 @@ gulp.task('test', function() {
   }
 });
 
-gulp.task('watch-js', function() {
+gulp.task('watch-js', ['watch-js-lint', 'watch-js-compile']);
+
+gulp.task('watch-js-lint', function() {
+  if (BUILD.JS_LINT_RULES) {
+    BUILD.JS_LINT_RULES.map(function(rule) {
+      gulp.watch(rule.sourceFiles, ['js-lint'])
+    });
+  } else {
+    console.warn('JS_LINT_RULES are not defined in your BUILD.json');
+  }
+});
+
+gulp.task('watch-js-compile', function() {
   if (BUILD.JS_BUILD_RULES) {
     BUILD.JS_BUILD_RULES.map(function(rule) {
-      gulp.watch(rule.sourceFiles, ['js'])
+      gulp.watch(rule.sourceFiles, ['js-compile'])
     });
   } else {
     console.warn('JS_BUILD_RULES are not defined in your BUILD.json');
