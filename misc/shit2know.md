@@ -1,0 +1,114 @@
+# SWEN 261 Final Exam: the bullshit class
+
+- Interface Design Golden Rules:
+  - Place the user in control
+  - Reduce the user's memory load
+  - Make the interface consistent
+- Refactoring:
+  - Changes internal structure for maintainability without changing external
+    behavior.
+  - Should be done any time design can be improved.
+  - Any time the code smells weird
+- Code Inspections
+  - Find defects
+  - Familiarize with codebase
+  - Enforces uniform design and coding standards
+  - Learn coding practice
+  - Improved communication
+- UML multiplicity
+  - `m..n`: range from m to n
+  - `m..*`: m or greater
+- Sequence Diagram
+  - Actor
+  - Object
+  - Lifeline
+  - End of life
+  - Activation box
+  - Message
+- Design Patterns
+  - Creational: class instantiation
+    - Abstract Factory
+    - Builder
+    - Factory Method
+    - Object Pool
+    - Prototype
+    - Singleton
+  - Structural: class and object composition
+    - Adapter
+    - Bridge
+    - Composite
+    - Decorator
+    - Facade
+    - Proxy
+  - Behavioral: class and object communication
+    - Chain of responsibility
+    - Command
+    - Interpreter
+    - Iterator
+    - Mediator
+    - Observer
+    - State
+    - Strategy
+    - Template method
+  - Four Parts of a Pattern
+    - Pattern Name
+    - Problem
+    - Solution
+    - Consequences
+  - Advantages
+    - Well described solutions that are thought out
+    - Shared vocabulary
+    - Concise language
+    - Abstract
+- Risk
+  - probability * severity
+  - project risks vs technical risks: project risks threaten project plan,
+    technical risks threaten implementation and quality
+  - Risk Avoidance, Risk Monitoring, Risk Management, Contingency Planning
+  - Vendor risks: failure of vendor to provide support
+  - Product risks: incompatibility with other systems
+  - Process risk: time required to integrate is higher than expected
+- Software Process Umbrella Activities
+  - Project Tracking
+  - Risk Management
+  - Quality Assurance
+  - Technical Reviews
+  - Measurement
+  - Configuration Management
+  - Work Product Production
+- Software Process Framework Activities
+  - Communication: get requirements from stakeholders
+  - Planning: create project plan for how work is to do
+  - Modeling: develop analysis and design models
+  - Construction: write and test code
+  - Deployment: deliver product
+- Testing:
+  - Regression testing tests after changes to ensure nothing else was broken.
+  - Integration testing puts together modules to test if shit works together.
+  - Unit testing tests individual modules to see if they break when working on
+    their own.
+- Software Review:
+  - Producer/Author: developer who is being reviewed
+  - Leader/Moderator: runs review meeting, distributes and manages meeting
+  - Reviewers/Inspectors: prepare for meeting, provide comments
+  - Reader: reads through code artifact
+  - Recorder/Scribe: takes notes during review process
+- Agile Manifesto:
+  - Individuals and interactions over processes and tools
+  - Working software over comprehensive documentation
+  - Customer collaboration over contract negotiation
+  - Responding to change over following a plan
+  - Reacts to change rapidly
+- Software Quality Costs:
+  - Prevention Costs: planning, technical reviews, testing, training
+  - Appraisal Costs: inspection, maintenance, testing
+  - Internal Failure Costs: rework, repair, failure mode analysis
+  - External Failure Costs: complaint resolution, product return/replacement,
+    customer support, warranty
+- Good software has strong cohesion and loose coupling
+- Bad software has anti-patterns, or improperly applied patterns
+- Separation of concerns: each module is dedicated to its own function and
+  can be tested and validated independently.
+- Traceability is a type of relation that should exist between Use Cases,
+  Requirements, Class Diagrams, Sequence Diagrams, Test Cases, and other
+  project items. It emables verification of an item's linkage to its source.
