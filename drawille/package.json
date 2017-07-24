@@ -1,0 +1,15 @@
+{
+  "dependencies": {
+    "bresenham": "^0.0.4",
+    "charm": "^1.0.2",
+    "drawille": "^1.1.0",
+    "gl-matrix": "^2.3.2",
+    "node-webcam": "^0.4.3"
+  },
+  "name": "drawille-test",
+  "version": "1.0.0",
+  "description": "Test code",
+  "main": "test.js",
+  "author": "Alvin Lin",
+  "license": "WTFPL"
+}
