@@ -28,7 +28,7 @@ confirm "Install Gimp? [y/n]" && sudo apt-get install gimp
 confirm "Install Heroku? [y\n]" && wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
 
 # Install LaTeX
-confirm "Install LaTeX? [y\n]" && sudo apt-get install texlive texlive-latex-base texlive-latex-extra
+confirm "Install LaTeX? [y\n]" && sudo apt-get install texlive-full
 
 # Install Java
 confirm "Install Java JRE and JDK? [y/n]" && sudo apt-get install default-jre default-jdk
