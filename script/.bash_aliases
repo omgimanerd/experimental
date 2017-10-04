@@ -8,16 +8,16 @@ export PS1='\[\033[01;31m\]\h:\[\033[01;34m\]\w\[\033[0;32m\]$(__git_ps1 " [%s] 
 trap 'echo -ne "\e[0m"' DEBUG
 
 # Custom aliases
+alias android-studio='/usr/local/android-studio/bin/studio.sh'
+alias arduino='/usr/local/arduino/arduino'
 alias lock='gnome-screensaver-command -l'
 alias python='python3'
-alias rit='ssh axl1439@glados.cs.rit.edu'
 alias show='gnome-open'
 alias sl='ls'
-alias windows='cd /media/omgimanerd/Windows8_OS/Users/omgimanerd'
 
 # Custom functions
 function news() {
-  curl http://54.201.130.221/$1
+  curl http://getnews.tech/$1
 }
 
 function weather() {
@@ -28,4 +28,8 @@ function sps() {
   git stash;
   git pull;
   git stash pop;
+}
+
+function rit() {
+  ssh axl1439@$1.cs.rit.edu
 }
