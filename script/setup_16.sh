@@ -24,9 +24,6 @@ confirm "Install compizconfig-settings-manager? [y/n]" && sudo apt-get install c
 # Install Gimp
 confirm "Install Gimp? [y/n]" && sudo apt-get install gimp
 
-# Install Heroku
-confirm "Install Heroku? [y\n]" && wget -O- https://toolbelt.heroku.com/install-ubuntu.sh | sh
-
 # Install LaTeX
 confirm "Install LaTeX? [y\n]" && sudo apt-get install texlive-full
 
@@ -42,3 +39,5 @@ confirm "Install musescore? [y/n]" && sudo apt-get install musescore
 # Install Node Version Manager
 confirm "Install NVM? [y/n]" && curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.3/install.sh | bash
 
+# Install Yarn
+confirm "Install Yarn? [y/n]" && curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - && echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list && sudo apt-get update && sudo apt-get install yarn
