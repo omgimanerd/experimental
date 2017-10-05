@@ -8,8 +8,9 @@ export PS1='\[\033[01;31m\]\h:\[\033[01;34m\]\w\[\033[0;32m\]$(__git_ps1 " [%s] 
 trap 'echo -ne "\e[0m"' DEBUG
 
 # Custom aliases
-alias android-studio='/usr/local/android-studio/bin/studio.sh'
-alias arduino='/usr/local/arduino/arduino'
+alias android-studio='/usr/local/android-studio/bin/studio.sh &'
+alias arduino='/usr/local/arduino/arduino &'
+alias intellij='/usr/local/intellij/bin/idea.sh &'
 alias lock='gnome-screensaver-command -l'
 alias python='python3'
 alias show='gnome-open'
