@@ -24,16 +24,24 @@ float currentPower = MIN_POWER;
 long lastUpdateTime = 0;
 float deltaTime = 0;
 
-void stepPower(int start_power, int end_power, int delay_ms) {
-  if (start_power < end_power) {
-    for (int i = start_power; i <= end_power; ++i) {
+/**
+ * Steps the motor from the starting power to the ending power with the given
+ * delay between each step.
+ * @param motor The motor to step
+ * @param startPower The starting power
+ * @param endPower The ending power
+ * @param delayMs The delay between each step
+ */
+void stepPower(Servo motor, int startPower, int endPower, int delayMs) {
+  if (startPower < endPower) {
+    for (int i = startPower; i <= endPower; ++i) {
       motor.write(i);
-      delay(delay_ms);
+      delay(delayMs);
     }
   } else {
-    for (int i = start_power; i >= end_power; --i) {
+    for (int i = startPower; i >= endPower; --i) {
       motor.write(i);
-      delay(delay_ms);
+      delay(delayMs);
     }
   }
 }
@@ -42,11 +50,11 @@ void initialize() {
   // This initial delay allows everything to start up before we begin
   // calibration
   delay(2000);
-  stepPower(90, 0, 2);
+  stepPower(motor, 90, 0, 2);
   delay(200);
-  stepPower(0, 90, 2);
+  stepPower(motor, 0, 90, 2);
   delay(4500);
-  stepPower(90, 0, 2);
+  stepPower(motor, 90, 0, 2);
 }
 
 void setup() {
@@ -75,7 +83,8 @@ void loop() {
   if (!button) {
     currentPower = throttle;
   } else {
-    currentPower = max(MIN_POWER, currentPower - (deltaTime * POWER_DECAY_RATE));
+    currentPower = max(
+      MIN_POWER, currentPower - (deltaTime * POWER_DECAY_RATE));
   }
   Serial.println(currentPower);
 
