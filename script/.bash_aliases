@@ -11,6 +11,7 @@ trap 'echo -ne "\e[0m"' DEBUG
 alias android-studio='/usr/local/android-studio/bin/studio.sh &'
 alias arduino='/usr/local/arduino/arduino &'
 alias intellij='/usr/local/intellij/bin/idea.sh &'
+alias gimmeshrug='echo "¯\_(ツ)_/¯" | xclip -selection c'
 alias lock='gnome-screensaver-command -l'
 alias python='python3'
 alias show='gnome-open'
