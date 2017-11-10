@@ -7,49 +7,43 @@
 #include "clock.h"
 #include "stopwatch.h"
 
-#define OLED_MOSI   9
-#define OLED_CLK   10
-#define OLED_DC    11
-#define OLED_CS    12
-#define OLED_RESET 13
-#define BUTTON1     4
-#define BUTTON2     3
+#define OLED_MOSI      9
+#define OLED_CLK      10
+#define OLED_DC       11
+#define OLED_CS       12
+#define OLED_RESET    13
+#define LEFT_BUTTON    4
+#define RIGHT_BUTTON   3
+#define POTENTIOMETER A0
 
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 RTC_DS3231 rtc;
 
-const int topButton = 4;
-const int bottomButton = 3;
-
 int potPin;
 int batteryLevel;
 float batteryVoltage;
-boolean powerSavingMode = false;
+bool powerSavingMode = false;
 int numCards = 3;
 
-bool buttonState;
-bool buttonToggleState;
-bool lastButtonState;
+bool leftButtonState;
+bool leftButtonToggleState;
+bool leftLastButtonState;
+bool rightButtonState;
+bool rightButtonToggleState;
+bool rightLastButtonState;
 
-void updateButtonTracking() {
-  buttonState = digitalRead(topButton) == LOW;
-  buttonToggleState = buttonState && (buttonState != lastButtonState);
-  lastButtonState = buttonState;
+void updateButtonStates() {
+  leftButtonState = digitalRead(LEFT_BUTTON) == LOW;
+  leftButtonToggleState = leftButtonState &&
+    (leftButtonState != leftLastButtonState);
+  leftLastButtonState = rightButtonState;
+  rightButtonState = digitalRead(RIGHT_BUTTON) == LOW;
+  rightButtonToggleState = rightButtonState &&
+    (rightButtonState != rightLastButtonState);
+  rightLastButtonState = rightButtonState;
 }
 
-bool otherbuttonState;
-bool otherbuttonToggleState;
-bool otherlastButtonState;
-
-void otherupdateButtonTracking() {
-  otherbuttonState = digitalRead(bottomButton) == LOW;
-  otherbuttonToggleState = otherbuttonState && (otherbuttonState != otherlastButtonState);
-  otherlastButtonState = otherbuttonState;
-}
-
-void setup()   {
-  Serial.begin(9600);
-
+void setup() {
   pinMode(topButton, INPUT);
   pinMode(bottomButton, INPUT);
 
@@ -66,8 +60,7 @@ void setup()   {
 }
 
 void loop() {
-  updateButtonTracking();
-  otherupdateButtonTracking();
+  updateButtonStates();
   DateTime now = rtc.now();
   potPin = analogRead(A0);
   batteryLevel = analogRead(A6);
@@ -75,7 +68,7 @@ void loop() {
 
   if (!powerSavingMode) {
     if (potPin < 100) {
-      displayAnalogClock(display, rtc.now());
+      displayAnalogClock(display, now);
       if (buttonToggleState) {
         powerSavingMode = true;
       }
