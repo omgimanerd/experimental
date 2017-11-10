@@ -11,12 +11,12 @@
 #define CLOCK_RADIUS 27
 #define CLOCK_X 30
 #define CLOCK_Y 31
-#define HOUR_HAND_LENGTH = 12
+#define HOUR_HAND_LENGTH 12
 #define MINUTE_HAND_LENGTH 17
 #define SECOND_HAND_LENGTH 27
+#define TICK_LENGTH 40
 
-int[][] calculateHandLocations(DateTime t);
-void drawAnalogClock(Adafruit_SSD1306 display, DateTime t);
-void drawDigitalClock(Adafruit_SSD1306 display, DateTime t);
+void displayAnalogClock(Adafruit_SSD1306 display, DateTime t);
+void displayDigitalClock(Adafruit_SSD1306 display, DateTime t);
 
 #endif

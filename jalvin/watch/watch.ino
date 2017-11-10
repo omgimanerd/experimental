@@ -1,25 +1,22 @@
 /// Watch code
 
-#include <SPI.h>
-#include <Wire.h>
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
-
-#include "RTClib.h"
+#include <RTClib.h>
 
 #include "clock.h"
-#include "imu.h"
 #include "stopwatch.h"
-
-RTC_DS3231 rtc;
 
 #define OLED_MOSI   9
 #define OLED_CLK   10
 #define OLED_DC    11
 #define OLED_CS    12
 #define OLED_RESET 13
+#define BUTTON1     4
+#define BUTTON2     3
 
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+RTC_DS3231 rtc;
 
 const int topButton = 4;
 const int bottomButton = 3;
@@ -30,9 +27,9 @@ float batteryVoltage;
 boolean powerSavingMode = false;
 int numCards = 3;
 
-boolean buttonState;
-boolean buttonToggleState;
-boolean lastButtonState;
+bool buttonState;
+bool buttonToggleState;
+bool lastButtonState;
 
 void updateButtonTracking() {
   buttonState = digitalRead(topButton) == LOW;
@@ -40,9 +37,9 @@ void updateButtonTracking() {
   lastButtonState = buttonState;
 }
 
-boolean otherbuttonState;
-boolean otherbuttonToggleState;
-boolean otherlastButtonState;
+bool otherbuttonState;
+bool otherbuttonToggleState;
+bool otherlastButtonState;
 
 void otherupdateButtonTracking() {
   otherbuttonState = digitalRead(bottomButton) == LOW;
@@ -61,17 +58,10 @@ void setup()   {
 
   display.begin(SSD1306_SWITCHCAPVCC);
 
-  if (! rtc.begin()) {
-    while (1);
-  }
+  while (!rtc.begin());
 
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  }
-
-  if (!lsm.begin())
-  {
-    while (1);
   }
 }
 
@@ -82,11 +72,10 @@ void loop() {
   potPin = analogRead(A0);
   batteryLevel = analogRead(A6);
   batteryVoltage = batteryLevel * (3.3 / 1023.0) * 2;
-  lsm.read();
 
   if (!powerSavingMode) {
     if (potPin < 100) {
-      displayClock(rtc.now());
+      displayAnalogClock(display, rtc.now());
       if (buttonToggleState) {
         powerSavingMode = true;
       }
@@ -97,10 +86,10 @@ void loop() {
       display.setCursor(0,5);
       display.print("Stopwatch");
       if (buttonToggleState) {
-        updateStopWatchState();
+        toggleStopwatch();
       }
-      updateStopWatch();
-      displayStopWatch();
+      updateStopwatch();
+      displayStopwatch(display);
     }
     else {
       display.setTextSize(1);

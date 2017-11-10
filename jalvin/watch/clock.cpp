@@ -1,10 +1,12 @@
-/// Module for displaying the clock
+/// Module for displaying the clock.
 /// Author: Alvin Lin (alvin@omgimanerd.tech)
 
 #include <Adafruit_SSD1306.h>
-#include "RTClib.h"
+#include <RTClib.h>
 
-const char* DAY_NAME = {
+#include "clock.h"
+
+const char* DAY_NAME[] = {
   "Sunday",
   "Monday",
   "Tuesday",
@@ -13,52 +15,65 @@ const char* DAY_NAME = {
   "Saturday"
 };
 
-int[][] calculateHandLocations(DateTime t) {
-
-}
-
-void drawAnalogClock(Adafruit_SSD1306 display, DateTime t) {
+void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   display.setTextSize(1);
   display.setTextColor(WHITE);
-  float second_y = CLOCK_Y - ((cos(t.second() * 0.1047)) * SECOND_HAND_LENGTH);
-  float second_x = CLOCK_X + ((sin(t.second() * 0.1047)) * SECOND_HAND_LENGTH);
-  float minute_y = CLOCK_Y - ((cos(t.minute() * 0.1047)) * MINUTE_HAND_LENGTH);
-  float minute_x = CLOCK_X + ((sin(t.minute() * 0.1047)) * MINUTE_HAND_LENGTH);
-  float hour_y = CLOCK_Y - ((cos((t.hour() * 0.5236) + (t.minute() * 0.0087))) * HOUR_HAND_LENGTH);
-  float hour_x = CLOCK_X + ((sin((t.hour() * 0.5236) + (t.minute() * 0.0087))) * HOUR_HAND_LENGTH);
-  for (int i = 0; i < 12; i++) {
-    display.drawPixel(CLOCK_X + ((sin(i * 0.5236)) * (hour_length + 13)), CLOCK_Y - ((cos(i * 0.5236)) * (hour_length + 13)) ,WHITE);
-  }
 
+  int handLocations[3][2];
+  float seconds_rad = t.second() * SECONDS_TO_RADIANS;
+  float minutes_rad = t.minute() * MINUTES_TO_RADIANS;
+  float hours_rad = t.hour() * HOURS_TO_RADIANS + minutes_rad / 12;
+
+  // Second hand X
+  handLocations[0][0] = CLOCK_X + cos(seconds_rad) * SECOND_HAND_LENGTH;
+  // Second hand Y
+  handLocations[0][1] = CLOCK_Y - sin(seconds_rad) * SECOND_HAND_LENGTH;
+  // Minute hand X
+  handLocations[1][0] = CLOCK_X + cos(minutes_rad) * MINUTE_HAND_LENGTH;
+  // Minute hand Y
+  handLocations[1][1] = CLOCK_Y - sin(minutes_rad) * MINUTE_HAND_LENGTH;
+  // Hour hand X
+  handLocations[2][0] = CLOCK_X + cos(hours_rad) * HOUR_HAND_LENGTH;
+  // Hour hand Y
+  handLocations[2][1] = CLOCK_Y - sin(hours_rad) * HOUR_HAND_LENGTH;
+
+  // Draw the clock circle.
   display.drawCircle(CLOCK_X, CLOCK_Y, CLOCK_RADIUS, WHITE);
   display.fillCircle(CLOCK_X, CLOCK_Y, 1, WHITE);
-  display.drawLine(CLOCK_X, CLOCK_Y, hour_x, hour_y, WHITE);
-  display.drawLine(CLOCK_X, CLOCK_Y, minute_x, minute_y, WHITE);
-  display.drawLine(CLOCK_X, CLOCK_Y, second_x, second_y, WHITE);
+
+  // Draw the ticks around the clock face.
+  for (int i = 0; i < 12; i++) {
+    float rad = i * HOURS_TO_RADIANS;
+    display.drawPixel(CLOCK_X + cos(rad) * TICK_LENGTH,
+                      CLOCK_Y - sin(rad) * TICK_LENGTH, WHITE);
+  }
+  // Draw the clock hands
+  for (int i = 0; i < 3; ++i) {
+    display.drawLine(
+      CLOCK_X, CLOCK_Y, handLocations[i][0], handLocations[i][1], WHITE);
+  }
+
   display.setCursor(64, 20);
   display.setTextColor(WHITE);
-
-  int day_of_week = (t.unixtime() / 86400) & 7;
-  display.println(DAY_NAME[day_of_week]);
+  display.println(DAY_NAME[(t.unixtime() / 86400) % 7]);
 
   display.setCursor(64, 30);
-  display.print(t.month(), DEC);
+  display.print(t.month());
   display.print('/');
-  display.print(t.day(), DEC);
+  display.print(t.day());
   display.print('/');
-  display.println(t.year(), DEC);
+  display.println(t.year());
 
   display.setCursor(64, 40);
 
-  display.print(t.hour(), DEC);
+  display.print(t.hour());
   display.print(':');
-  display.print(t.minute(), DEC);
+  display.print(t.minute());
   display.print(':');
-  display.println(t.second(), DEC);
+  display.println(t.second());
 }
 
-
-void drawDigitalClock(Adafruit_SSD1306 display, DateTime t) {
+void displayDigitalClock(Adafruit_SSD1306 display, DateTime t) {
   display.setCursor(85, 50);
   int H = t.hour();
   bool am;
@@ -66,16 +81,13 @@ void drawDigitalClock(Adafruit_SSD1306 display, DateTime t) {
   if (H == 0) {
     am = true;
     newH = 12;
-  }
-  else if (H < 12) {
+  } else if (H < 12) {
     am = true;
     newH = H;
-  }
-  else if (H == 12) {
+  } else if (H == 12) {
     am = false;
     newH = H;
-  }
-  else if (H > 12) {
+  } else if (H > 12) {
     am = false;
     newH = H - 12;
   }

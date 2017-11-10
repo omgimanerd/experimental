@@ -1,52 +1,17 @@
-/**
- * @author Alvin Lin (alvin.lin@stuypulse.com)
- * Header file that manages a stopwatch.
- */
+/// Header file for stopwatch.cpp
+/// Author: Alvin Lin (alvin@omgimanerd.tech)
 
-boolean stopWatchRunning = false;
+#ifndef STOPWATCH_H
+#define STOPWATCH_H
 
-long timeStarted;
-long timePassed;
+#define STOPWATCH_X 0
+#define STOPWATCH_Y 30
 
-void startTimer() {
-  stopWatchRunning = true;
-  timeStarted = millis();
-}
+void startStopwatch();
+void updateStopwatch();
+void stopStopwatch();
+void resetStopwatch();
+void toggleStopwatch();
+void displayStopwatch(Adafruit_SSD1306 display);
 
-void updateStopWatch() {
-  if (stopWatchRunning) {
-    timePassed = millis() - timeStarted;
-  }
-}
-
-void stopTimer() {
-  stopWatchRunning = false;
-}
-
-void resetTimer() {
-  timePassed = 0;
-}
-
-void displayStopWatch() {
-  display.setCursor(0, 30);
-  display.setTextSize(2);
-  display.setTextColor(WHITE);
-  int milliseconds = timePassed % 1000;
-  int seconds = (timePassed / 1000) % 60;
-  int minutes = (timePassed / 1000) / 60;
-  display.print(minutes);
-  display.print(":");
-  display.print(seconds);
-  display.print(":");
-  display.print(milliseconds);  
-}
-
-void updateStopWatchState() {
-  if (stopWatchRunning) {
-    stopTimer();
-  } else if (timePassed == 0) {
-    startTimer(); 
-  } else {
-    resetTimer();
-  }
-}
+#endif
