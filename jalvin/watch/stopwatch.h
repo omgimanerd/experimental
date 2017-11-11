@@ -4,8 +4,12 @@
 #ifndef STOPWATCH_H
 #define STOPWATCH_H
 
-#define STOPWATCH_X 0
-#define STOPWATCH_Y 30
+#define STOPWATCH_M_S_X   0
+#define STOPWATCH_M_S_Y  30
+#define STOPWATCH_MS_X   77
+#define STOPWATCH_MS_Y   50
+
+#define TIME_BUFFER_SIZE  9
 
 void startStopwatch();
 void updateStopwatch();

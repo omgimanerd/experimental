@@ -15,6 +15,9 @@ const char* DAY_NAME[] = {
   "Saturday"
 };
 
+/// Given the display struct and the current DateTime struct, this function
+/// draws an analog clock and displays other relevant time information on the
+/// face of the display.
 void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   // Some basic math for drawing the clock hands.
   int handLocations[2][2];
@@ -57,16 +60,16 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   display.println(DAY_NAME[(t.unixtime() / 86400) % 7]);
 
   // Display the date.
-  char date[DATE_BUFFER_SIZE];
-  sprintf(date, "%02d/%02d/%04d", t.month(), t.day(), t.year());
+  char dateBuffer[DATE_BUFFER_SIZE];
+  sprintf(dateBuffer, "%02d/%02d/%04d", t.month(), t.day(), t.year());
   display.setCursor(DATE_X, DATE_Y);
-  display.print(date);
+  display.print(dateBuffer);
 
   // Display the time.
-  char time[TIME_BUFFER_SIZE];
+  char timeBuffer[TIME_BUFFER_SIZE];
   int h = t.hour();
-  sprintf(time, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, t.minute());
+  sprintf(timeBuffer, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, t.minute());
   display.setTextSize(2);
   display.setCursor(TIME_X, TIME_Y);
-  display.print(time);
+  display.print(timeBuffer);
 }

@@ -4,6 +4,6 @@
 #ifndef IMU_H
 #define IMU_H
 
-void displayIMU();
+void displayIMU(Adafruit_SSD1306 display, Adafruit_LSM9DS0 lsm);
 
 #endif
