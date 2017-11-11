@@ -16,26 +16,19 @@ const char* DAY_NAME[] = {
 };
 
 void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
-  display.setTextSize(1);
-  display.setTextColor(WHITE);
+  // Some basic math for drawing the clock hands.
+  int handLocations[2][2];
+  float minutes_rad = t.minute() * (TAU / 60.0);
+  float hours_rad = t.hour() * (TAU / 60.0) + minutes_rad / 12;
 
-  int handLocations[3][2];
-  float seconds_rad = t.second() * SECONDS_TO_RADIANS;
-  float minutes_rad = t.minute() * MINUTES_TO_RADIANS;
-  float hours_rad = t.hour() * HOURS_TO_RADIANS + minutes_rad / 12;
-
-  // Second hand X
-  handLocations[0][0] = CLOCK_X + cos(seconds_rad) * SECOND_HAND_LENGTH;
-  // Second hand Y
-  handLocations[0][1] = CLOCK_Y - sin(seconds_rad) * SECOND_HAND_LENGTH;
   // Minute hand X
-  handLocations[1][0] = CLOCK_X + cos(minutes_rad) * MINUTE_HAND_LENGTH;
+  handLocations[0][0] = CLOCK_X + sin(minutes_rad) * MINUTE_HAND_LENGTH;
   // Minute hand Y
-  handLocations[1][1] = CLOCK_Y - sin(minutes_rad) * MINUTE_HAND_LENGTH;
+  handLocations[0][1] = CLOCK_Y - cos(minutes_rad) * MINUTE_HAND_LENGTH;
   // Hour hand X
-  handLocations[2][0] = CLOCK_X + cos(hours_rad) * HOUR_HAND_LENGTH;
+  handLocations[1][0] = CLOCK_X + sin(hours_rad) * HOUR_HAND_LENGTH;
   // Hour hand Y
-  handLocations[2][1] = CLOCK_Y - sin(hours_rad) * HOUR_HAND_LENGTH;
+  handLocations[1][1] = CLOCK_Y - cos(hours_rad) * HOUR_HAND_LENGTH;
 
   // Draw the clock circle.
   display.drawCircle(CLOCK_X, CLOCK_Y, CLOCK_RADIUS, WHITE);
@@ -43,59 +36,37 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
 
   // Draw the ticks around the clock face.
   for (int i = 0; i < 12; i++) {
-    float rad = i * HOURS_TO_RADIANS;
-    display.drawPixel(CLOCK_X + cos(rad) * TICK_LENGTH,
-                      CLOCK_Y - sin(rad) * TICK_LENGTH, WHITE);
+    float rad = i * (TAU / 12);
+    int x1 = CLOCK_X + sin(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
+    int y1 = CLOCK_Y - cos(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
+    int x2 = CLOCK_X + sin(rad) * (CLOCK_RADIUS - TICK_DISTANCE - TICK_LENGTH);
+    int y2 = CLOCK_Y - cos(rad) * (CLOCK_RADIUS - TICK_DISTANCE - TICK_LENGTH);
+    display.drawLine(x1, y1, x2, y2, WHITE);
   }
+
   // Draw the clock hands
-  for (int i = 0; i < 3; ++i) {
+  for (int i = 0; i < 2; ++i) {
     display.drawLine(
       CLOCK_X, CLOCK_Y, handLocations[i][0], handLocations[i][1], WHITE);
   }
 
-  display.setCursor(64, 20);
+  // Display the day of the week.
+  display.setTextSize(1);
+  display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
   display.println(DAY_NAME[(t.unixtime() / 86400) % 7]);
 
-  display.setCursor(64, 30);
-  display.print(t.month());
-  display.print('/');
-  display.print(t.day());
-  display.print('/');
-  display.println(t.year());
+  // Display the date.
+  char date[DATE_BUFFER_SIZE];
+  sprintf(date, "%02d/%02d/%04d", t.month(), t.day(), t.year());
+  display.setCursor(DATE_X, DATE_Y);
+  display.print(date);
 
-  display.setCursor(64, 40);
-
-  display.print(t.hour());
-  display.print(':');
-  display.print(t.minute());
-  display.print(':');
-  display.println(t.second());
-}
-
-void displayDigitalClock(Adafruit_SSD1306 display, DateTime t) {
-  display.setCursor(85, 50);
-  int H = t.hour();
-  bool am;
-  int newH;
-  if (H == 0) {
-    am = true;
-    newH = 12;
-  } else if (H < 12) {
-    am = true;
-    newH = H;
-  } else if (H == 12) {
-    am = false;
-    newH = H;
-  } else if (H > 12) {
-    am = false;
-    newH = H - 12;
-  }
-  if (am == true) {
-    display.print('A');
-  }
-  else if (am == false) {
-    display.print('P');
-  }
-  display.print('M');
+  // Display the time.
+  char time[TIME_BUFFER_SIZE];
+  int h = t.hour();
+  sprintf(time, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, t.minute());
+  display.setTextSize(2);
+  display.setCursor(TIME_X, TIME_Y);
+  display.print(time);
 }

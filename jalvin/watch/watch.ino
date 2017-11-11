@@ -1,4 +1,5 @@
-/// Watch code
+/// Main watch driver code.
+/// Author: Alvin Lin (alvin@omgimanerd.tech)
 
 #include <Adafruit_GFX.h>
 #include <Adafruit_SSD1306.h>
@@ -12,18 +13,23 @@
 #define OLED_DC       11
 #define OLED_CS       12
 #define OLED_RESET    13
-#define LEFT_BUTTON    4
-#define RIGHT_BUTTON   3
+#define LASER          2
+#define LEFT_BUTTON    3
+#define RIGHT_BUTTON   4
 #define POTENTIOMETER A0
+#define BATTERY       A1
+
+#define POTENTIOMETER_LIMIT 1023
+#define VOLTAGE_MAX 3.3
+
+#define LASER_SETTING      400
+#define STOPWATCH_SETTING  700
+#define CLOCK_SETTING     1000
 
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 RTC_DS3231 rtc;
 
-int potPin;
-int batteryLevel;
-float batteryVoltage;
 bool powerSavingMode = false;
-int numCards = 3;
 
 bool leftButtonState;
 bool leftButtonToggleState;
@@ -32,11 +38,13 @@ bool rightButtonState;
 bool rightButtonToggleState;
 bool rightLastButtonState;
 
+/// Updates the variables storing the state of the buttons and the toggle
+/// state of the buttons.
 void updateButtonStates() {
   leftButtonState = digitalRead(LEFT_BUTTON) == LOW;
   leftButtonToggleState = leftButtonState &&
     (leftButtonState != leftLastButtonState);
-  leftLastButtonState = rightButtonState;
+  leftLastButtonState = leftButtonState;
   rightButtonState = digitalRead(RIGHT_BUTTON) == LOW;
   rightButtonToggleState = rightButtonState &&
     (rightButtonState != rightLastButtonState);
@@ -44,59 +52,65 @@ void updateButtonStates() {
 }
 
 void setup() {
-  pinMode(topButton, INPUT);
-  pinMode(bottomButton, INPUT);
+  Serial.begin(9600);
 
-  digitalWrite(topButton, HIGH);
-  digitalWrite(bottomButton, HIGH);
+  pinMode(LEFT_BUTTON, INPUT);
+  pinMode(RIGHT_BUTTON, INPUT);
 
   display.begin(SSD1306_SWITCHCAPVCC);
+  display.setTextColor(WHITE);
+  display.clearDisplay();
 
   while (!rtc.begin());
-
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
 }
 
 void loop() {
-  updateButtonStates();
   DateTime now = rtc.now();
-  potPin = analogRead(A0);
-  batteryLevel = analogRead(A6);
-  batteryVoltage = batteryLevel * (3.3 / 1023.0) * 2;
+  updateButtonStates();
+
+  float potentiometer = analogRead(POTENTIOMETER);
+  float batteryLevel = analogRead(BATTERY);
+
+  float batteryVoltage = (batteryLevel / POTENTIOMETER_LIMIT) * VOLTAGE_MAX * 2;
 
   if (!powerSavingMode) {
-    if (potPin < 100) {
+    if (potentiometer > CLOCK_SETTING) {
       displayAnalogClock(display, now);
-      if (buttonToggleState) {
+      if (leftButtonToggleState) {
         powerSavingMode = true;
       }
-    }
-    else if (potPin < 400) {
+    } else if (potentiometer > STOPWATCH_SETTING) {
       display.setTextSize(1);
-      display.setTextColor(WHITE);
-      display.setCursor(0,5);
+      display.setCursor(0, 5);
       display.print("Stopwatch");
-      if (buttonToggleState) {
+      if (leftButtonToggleState) {
         toggleStopwatch();
       }
       updateStopwatch();
       displayStopwatch(display);
-    }
-    else {
+    } else if (potentiometer > LASER_SETTING) {
       display.setTextSize(1);
-      display.setTextColor(WHITE);
-      display.setCursor(0,5);
+      display.setCursor(0, 5);
+      display.print("Laser");
+
+      display.setCursor(30, 30);
+      display.setTextSize(2);
+      display.print(leftButtonState ? "ON" : "OFF");
+      digitalWrite(LASER, leftButtonState ? HIGH : LOW);
+    } else {
+      display.setTextSize(1);
+      display.setCursor(0, 5);
       display.print("Battery Voltage");
-      display.setCursor(0, 30);
+
+      display.setCursor(30, 30);
       display.setTextSize(2);
       display.print(batteryVoltage);
       display.println("V");
-      display.display();
     }
-  }
-  else if (buttonToggleState) {
+  } else if (leftButtonToggleState) {
     powerSavingMode = false;
   }
   display.display();

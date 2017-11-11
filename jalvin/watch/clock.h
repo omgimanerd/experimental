@@ -4,19 +4,26 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#define SECONDS_TO_RADIANS 0.1047
-#define MINUTES_TO_RADIANS 0.1047
-#define HOURS_TO_RADIANS 0.5236
+#define TAU              6.28
 
-#define CLOCK_RADIUS 27
-#define CLOCK_X 30
-#define CLOCK_Y 31
-#define HOUR_HAND_LENGTH 12
-#define MINUTE_HAND_LENGTH 17
-#define SECOND_HAND_LENGTH 27
-#define TICK_LENGTH 40
+#define CLOCK_RADIUS       30
+#define CLOCK_X            30
+#define CLOCK_Y            31
+#define HOUR_HAND_LENGTH   10
+#define MINUTE_HAND_LENGTH 20
+#define TICK_DISTANCE       3
+#define TICK_LENGTH         2
+
+#define DAY_OF_WEEK_X      68
+#define DAY_OF_WEEK_Y      12
+#define DATE_X             68
+#define DATE_Y             22
+#define TIME_X             68
+#define TIME_Y             35
+
+#define DATE_BUFFER_SIZE   11
+#define TIME_BUFFER_SIZE    6
 
 void displayAnalogClock(Adafruit_SSD1306 display, DateTime t);
-void displayDigitalClock(Adafruit_SSD1306 display, DateTime t);
 
 #endif
