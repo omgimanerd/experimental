@@ -6,7 +6,7 @@
 
 #include "clock.h"
 
-const char* DAY_NAME[] = {
+const char DAY_NAME[7][10] = {
   "Sunday",
   "Monday",
   "Tuesday",
@@ -20,9 +20,9 @@ const char* DAY_NAME[] = {
 /// face of the display.
 void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   // Some basic math for drawing the clock hands.
-  int handLocations[2][2];
+  short handLocations[2][2];
   float minutes_rad = t.minute() * (TAU / 60.0);
-  float hours_rad = t.hour() * (TAU / 60.0) + minutes_rad / 12;
+  float hours_rad = (t.hour() * (TAU / 12.0)) + (minutes_rad / 12.0);
 
   // Minute hand X
   handLocations[0][0] = CLOCK_X + sin(minutes_rad) * MINUTE_HAND_LENGTH;
@@ -40,15 +40,17 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   // Draw the ticks around the clock face.
   for (int i = 0; i < 12; i++) {
     float rad = i * (TAU / 12);
-    int x1 = CLOCK_X + sin(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
-    int y1 = CLOCK_Y - cos(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
-    int x2 = CLOCK_X + sin(rad) * (CLOCK_RADIUS - TICK_DISTANCE - TICK_LENGTH);
-    int y2 = CLOCK_Y - cos(rad) * (CLOCK_RADIUS - TICK_DISTANCE - TICK_LENGTH);
+    short x1 = CLOCK_X + sin(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
+    short y1 = CLOCK_Y - cos(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
+    short x2 = CLOCK_X + sin(rad) *
+      (CLOCK_RADIUS - TICK_DISTANCE - TICK_LENGTH);
+    short y2 = CLOCK_Y - cos(rad) *
+      (CLOCK_RADIUS - TICK_DISTANCE - TICK_LENGTH);
     display.drawLine(x1, y1, x2, y2, WHITE);
   }
 
   // Draw the clock hands
-  for (int i = 0; i < 2; ++i) {
+  for (short i = 0; i < 2; ++i) {
     display.drawLine(
       CLOCK_X, CLOCK_Y, handLocations[i][0], handLocations[i][1], WHITE);
   }
@@ -57,7 +59,7 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   display.setTextSize(1);
   display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
-  display.println(DAY_NAME[(t.unixtime() / 86400) % 7]);
+  display.println(DAY_NAME[t.dayOfTheWeek()]);
 
   // Display the date.
   char dateBuffer[DATE_BUFFER_SIZE];
@@ -67,7 +69,7 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
 
   // Display the time.
   char timeBuffer[TIME_BUFFER_SIZE];
-  int h = t.hour();
+  short h = t.hour();
   sprintf(timeBuffer, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, t.minute());
   display.setTextSize(2);
   display.setCursor(TIME_X, TIME_Y);

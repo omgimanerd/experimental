@@ -13,7 +13,7 @@
 
 void startStopwatch();
 void updateStopwatch();
-void stopStopwatch();
+void pauseStopwatch();
 void resetStopwatch();
 void toggleStopwatch();
 void displayStopwatch(Adafruit_SSD1306 display);

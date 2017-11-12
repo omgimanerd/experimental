@@ -7,33 +7,36 @@
 #include "stopwatch.h"
 
 bool stopWatchRunning = false;
-long timeStarted;
-long timePassed;
+long timeStarted = -1;
+long timePassed = 0;
 
-/// Starts the stopwatch.
+/// Starts/resumes the stopwatch.
 void startStopwatch() {
   stopWatchRunning = true;
-  timeStarted = millis();
+  if (timeStarted == -1) {
+    timeStarted = millis();
+  }
 }
 
-/// Stops the stopwatch.
-void stopStopwatch() {
+/// Pauses the stopwatch.
+void pauseStopwatch() {
   stopWatchRunning = false;
 }
 
 /// Resets the stopwatch.
 void resetStopwatch() {
-  timePassed = 0;
+  if (!stopWatchRunning) {
+    timePassed = 0;
+    timeStarted = -1;
+  }
 }
 
-/// Toggles the stopwatch from stop to start to reset.
+/// Toggles the stopwatch from running to paused or paused to running.
 void toggleStopwatch() {
   if (stopWatchRunning) {
-    stopStopwatch();
-  } else if (timePassed == 0) {
-    startStopwatch();
+    pauseStopwatch();
   } else {
-    resetStopwatch();
+    startStopwatch();
   }
 }
 
@@ -47,12 +50,16 @@ void updateStopwatch() {
 
 /// Draws the state of the stopwatch onto the face of the display.
 void displayStopwatch(Adafruit_SSD1306 display) {
-  int milliseconds = timePassed % 1000;
-  int seconds = (timePassed / 1000) % 60;
-  int minutes = (timePassed / 1000) / 60;
+  short milliseconds = timePassed % 1000;
+  short seconds = (timePassed / 1000) % 60;
+  short minutes = (timePassed / 1000) / 60;
 
   char timeBuffer[TIME_BUFFER_SIZE];
   sprintf(timeBuffer, "%5d:%02d", minutes, seconds, milliseconds);
+
+  display.setCursor(0, 5);
+  display.setTextSize(1);
+  display.print("Stopwatch");
 
   display.setCursor(STOPWATCH_M_S_X, STOPWATCH_M_S_Y);
   display.setTextSize(2);
