@@ -1,60 +1,67 @@
 /// Main watch driver code.
 /// Author: Alvin Lin (alvin@omgimanerd.tech)
 
-#include <Adafruit_LSM9DS0.h>
-#include <Adafruit_Sensor.h>
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 
 #include "clock.h"
-#include "imu.h"
 #include "stopwatch.h"
 
+#define LASER                  2
+#define RIGHT_BUTTON           3
+#define LEFT_BUTTON            4
 #define OLED_MOSI              9
 #define OLED_CLK              10
 #define OLED_DC               11
 #define OLED_CS               12
 #define OLED_RESET            13
-#define LASER                  2
-#define LEFT_BUTTON            3
-#define RIGHT_BUTTON           4
 #define POTENTIOMETER         A0
 #define BATTERY               A1
 
-#define POTENTIOMETER_LIMIT 1023
+#define ANALOG_LIMIT        1023
 #define VOLTAGE_MAX          3.3
 
-#define CLOCK_SETTING       1000
-#define STOPWATCH_SETTING    750
-#define LASER_SETTING        500
-#define IMU_SETTING          250
+#define CLOCK_MODE             0
+#define STOPWATCH_MODE         1
+#define LASER_MODE             2
+#define VOLTAGE_MODE           3
 
+/// Globals for holding the module structs.
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
-// Adafruit_LSM9DS0 lsm = Adafruit_LSM9DS0();
 RTC_DS3231 rtc;
 
-bool screenOff = false;
-int laserSquiggles = 0;
+/// Holds the potentiometer interval ranges for the watch modes.
+int MODE_INTERVALS[4][2] = {
+  { 0, 300 },
+  { 301, 600 },
+  { 601, 900 },
+  { 901, 1024 }
+};
 
-bool leftButtonState;
-bool leftButtonToggleState;
-bool leftLastButtonState;
-bool rightButtonState;
-bool rightButtonToggleState;
-bool rightLastButtonState;
+/// Returns whether or not the watch is set in a certain mode.
+bool isMode(short potentiometer, short mode) {
+  return MODE_INTERVALS[mode][0] <= potentiometer &&
+    potentiometer <= MODE_INTERVALS[mode][1];
+}
+
+/// Button state trackers [STATE, TOGGLE, LAST]
+bool leftButton[3];
+bool rightButton[3];
 
 /// Updates the variables storing the state of the buttons and the toggle
 /// state of the buttons.
 void updateButtonStates() {
-  leftButtonState = digitalRead(LEFT_BUTTON) == LOW;
-  leftButtonToggleState = leftButtonState &&
-    (leftButtonState != leftLastButtonState);
-  leftLastButtonState = leftButtonState;
-  rightButtonState = digitalRead(RIGHT_BUTTON) == LOW;
-  rightButtonToggleState = rightButtonState &&
-    (rightButtonState != rightLastButtonState);
-  rightLastButtonState = rightButtonState;
+  leftButton[0] = digitalRead(LEFT_BUTTON) == LOW;
+  leftButton[1] = leftButton[0] && (leftButton[0] != leftButton[2]);
+  leftButton[2] = leftButton[0];
+  leftButton[0] = digitalRead(RIGHT_BUTTON) == LOW;
+  leftButton[1] = leftButton[0] && (leftButton[0] != rightButton[2]);
+  rightButton[2] = leftButton[0];
 }
+
+/// Miscellaneous state variables
+bool screenOff = false;
+short laserSquiggles = 0;
 
 /// Function called by Arduino to once at the start to initialize variables.
 void setup() {
@@ -71,69 +78,76 @@ void setup() {
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-
-  // Wait until the LSM sensor is ready.
-  // while (!lsm.begin());
 }
 
 /// Function called by Arduino to update state.
 void loop() {
   DateTime now = rtc.now();
+  short potentiometer = analogRead(POTENTIOMETER);
+  float batteryLevel = analogRead(BATTERY);
+  float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
+
   updateButtonStates();
   updateStopwatch();
 
-  float potentiometer = analogRead(POTENTIOMETER);
-  float batteryLevel = analogRead(BATTERY);
-
-  float batteryVoltage = (batteryLevel / POTENTIOMETER_LIMIT) * VOLTAGE_MAX * 2;
-
-  if (potentiometer <= IMU_SETTING && potentiometer < LASER_SETTING) {
-    digitalWrite(LASER, LOW);
-  }
-
-  display.clearDisplay();
   if (!screenOff) {
-    if (potentiometer > CLOCK_SETTING) {
+    // All the modes are guaranteed to be mutually exclusive so the display code
+    // will never overlap.
+    if (isMode(potentiometer, CLOCK_MODE)) {
+      Serial.print("CLOCK ");
       displayAnalogClock(display, now);
-      if (leftButtonToggleState) {
+      if (leftButton[1]) {
         screenOff = true;
       }
-    } else if (potentiometer > STOPWATCH_SETTING) {
+    }
+
+    if (isMode(potentiometer, STOPWATCH_MODE)) {
+      Serial.print("STOPWATCH ");
       display.setTextSize(1);
       display.setCursor(0, 5);
       display.print("Stopwatch");
-      if (leftButtonToggleState) {
+      if (leftButton[1]) {
         toggleStopwatch();
       }
       displayStopwatch(display);
-    } else if (potentiometer > LASER_SETTING) {
+    }
+
+    if (isMode(potentiometer, LASER_MODE)) {
+      Serial.print("LASER ");
       display.setTextSize(1);
       display.setCursor(0, 5);
       display.print("Laser");
       display.setCursor(0, 30);
       display.setTextSize(2);
-      display.print(leftButtonState ? "ON" : "OFF");
+      display.print(leftButton[0] ? "ON" : "OFF");
       display.setCursor(25, 35);
-      if (leftButtonState) {
+      if (leftButton[0]) {
         for (int i = 0; i < laserSquiggles; ++i) {
           display.print("~");
         }
         laserSquiggles = (laserSquiggles + 1) % 8;
       }
-      digitalWrite(LASER, leftButtonState ? HIGH : LOW);
-    } else if (potentiometer > IMU_SETTING) {
-      // displayIMU(display, lsm);
+      digitalWrite(LASER, leftButton[0] ? HIGH : LOW);
     } else {
+      digitalWrite(LASER, LOW);
+    }
+
+    if (isMode(potentiometer, VOLTAGE_MODE)) {
+      Serial.print("VOLTAGE ");
       display.setTextSize(1);
       display.setCursor(0, 5);
       display.print("Battery Voltage");
       display.setCursor(0, 30);
       display.setTextSize(2);
-      display.print(batteryVoltage);
+      display.print(voltage);
       display.println("V");
     }
-  } else if (leftButtonToggleState) {
+  } else if (leftButton[1]) {
     screenOff = false;
   }
+
+  Serial.println(potentiometer);
+
   display.display();
+  display.clearDisplay();
 }
