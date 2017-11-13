@@ -6,13 +6,14 @@
 
 #include "constants.h"
 
-#include "calendar.h"
+// #include "calendar.h"
 #include "clock.h"
-#include "stopwatch.h"
+// #include "stopwatch.h"
 
 #define LASER          2
 #define RIGHT_BUTTON   3
-#define LEFT_BUTTON    4
+#define MIDDLE_BUTTON  5
+#define LEFT_BUTTON    6
 #define OLED_MOSI      9
 #define OLED_CLK      10
 #define OLED_DC       11
@@ -39,9 +40,9 @@ bool screenOff = false;
 short laserSquiggles = 0;
 float batteryLevel, voltage;
 
-/// Button state trackers as [STATE, TOGGLE, LAST]
-bool leftButton[3];
-bool rightButton[3];
+/// Button state trackers.
+bool buttonPins[3] = { LEFT_BUTTON, MIDDLE_BUTTON, RIGHT_BUTTON };
+bool buttons[3][3];
 
 /// Holds the potentiometer interval ranges for the watch modes.
 int MODE_INTERVALS[5][2] = {
@@ -61,14 +62,12 @@ bool isMode(short mode) {
 /// Updates the variables storing the state of the buttons and the toggle
 /// state of the buttons.
 void updateButtonStates() {
-  leftButton[STATE] = digitalRead(LEFT_BUTTON) == LOW;
-  leftButton[TOGGLE] = leftButton[STATE] &&
-    (leftButton[STATE] != leftButton[LAST]);
-  leftButton[LAST] = leftButton[STATE];
-  rightButton[STATE] = digitalRead(RIGHT_BUTTON) == LOW;
-  rightButton[TOGGLE] = rightButton[STATE] &&
-    (rightButton[STATE] != rightButton[LAST]);
-  rightButton[LAST] = rightButton[STATE];
+  for (byte i = 0; i < 3; ++i) {
+    buttons[i][STATE] = digitalRead(buttonPins[i]) == LOW;
+    buttons[i][TOGGLE] = buttons[i][STATE] &&
+      (buttons[i][STATE] != buttons[i][LAST]);
+    buttons[i][LAST] = buttons[i][STATE];
+  }
 }
 
 void displayTitle(const char* title) {
@@ -82,6 +81,7 @@ void setup() {
   Serial.begin(9600);
 
   pinMode(LEFT_BUTTON, INPUT);
+  pinMode(MIDDLE_BUTTON, INPUT);
   pinMode(RIGHT_BUTTON, INPUT);
 
   display.begin(SSD1306_SWITCHCAPVCC);
@@ -103,59 +103,57 @@ void loop() {
   voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
 
   updateButtonStates();
-  updateStopwatch();
+  // updateStopwatch();
 
-  if (!screenOff) {
-    // All the modes are guaranteed to be mutually exclusive so their code will
-    // never overlap.
-    if (isMode(CLOCK_MODE)) {
+  // All the modes are guaranteed to be mutually exclusive so their code will
+  // never overlap.
+  if (isMode(CLOCK_MODE)) {
+    if (!screenOff) {
       displayAnalogClock(display, now);
-      if (leftButton[TOGGLE]) {
-        screenOff = true;
-      }
     }
-
-    if (isMode(CALENDAR_MODE)) {
-      displayTitle("Calendar");
-      displayCalendar(display);
-    }
-
-    if (isMode(STOPWATCH_MODE)) {
-      if (leftButton[TOGGLE]) {
-        toggleStopwatch();
-      } else if (rightButton[TOGGLE]) {
-        resetStopwatch();
-      }
-      displayStopwatch(display);
-    }
-
-    if (isMode(LASER_MODE)) {
-      displayTitle("Laser");
-      display.setCursor(0, 30);
-      display.setTextSize(2);
-      display.print(leftButton[0] ? "ON" : "OFF");
-      display.setCursor(25, 35);
-      if (leftButton[0]) {
-        for (int i = 0; i < laserSquiggles; ++i) {
-          display.print("~");
-        }
-        laserSquiggles = (laserSquiggles + 1) % 8;
-      }
-      digitalWrite(LASER, leftButton[0] ? HIGH : LOW);
-    } else {
-      digitalWrite(LASER, LOW);
-    }
-
-    if (isMode(VOLTAGE_MODE)) {
-      displayTitle("Battery Voltage");
-      display.setCursor(0, 30);
-      display.setTextSize(2);
-      display.print(voltage);
-      display.println("V");
-    }
-  } else if (leftButton[1]) {
-    screenOff = false;
+    screenOff = buttons[LEFT][TOGGLE] ? !screenOff : screenOff;
   }
+
+  if (isMode(CALENDAR_MODE)) {
+    // displayTitle("Calendar");
+    // displayCalendar(display);
+  }
+
+  if (isMode(STOPWATCH_MODE)) {
+    // if (leftButton[TOGGLE]) {
+    //   toggleStopwatch();
+    // } else if (rightButton[TOGGLE]) {
+    //   resetStopwatch();
+    // }
+    // displayStopwatch(display);
+  }
+
+  if (isMode(LASER_MODE)) {
+    displayTitle("Laser");
+    display.setCursor(0, 30);
+    display.setTextSize(2);
+    display.print(buttons[LEFT][STATE] ? "ON" : "OFF");
+    display.setCursor(25, 35);
+    if (buttons[LEFT][STATE]) {
+      for (int i = 0; i < laserSquiggles; ++i) {
+        display.print("~");
+      }
+      laserSquiggles = (laserSquiggles + 1) % 8;
+    }
+    digitalWrite(LASER, buttons[LEFT][STATE] ? HIGH : LOW);
+  } else {
+    digitalWrite(LASER, LOW);
+  }
+
+  if (isMode(VOLTAGE_MODE)) {
+    displayTitle("Battery Voltage");
+    display.setCursor(0, 30);
+    display.setTextSize(2);
+    display.print(voltage);
+    display.println("V");
+  }
+
+  Serial.println(potentiometer);
 
   display.display();
   display.clearDisplay();

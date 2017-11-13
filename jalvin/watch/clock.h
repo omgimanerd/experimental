@@ -14,6 +14,8 @@
 #define TICK_DISTANCE       3
 #define TICK_LENGTH         2
 
+#define WAKE_LENGTH_MS   5000
+
 #define DAY_OF_WEEK_X      68
 #define DAY_OF_WEEK_Y      12
 #define DATE_X             68
@@ -24,6 +26,8 @@
 #define DATE_BUFFER_SIZE   11
 #define TIME_BUFFER_SIZE    6
 
-void displayAnalogClock(Adafruit_SSD1306 display, DateTime t);
+// void updateClockFace(DateTime t, bool wake);
+// void displayClockFace(Adafruit_SSD1306 display);
+void displayAnalogClock(Adafruit_SSD1306 display, DateTime now);
 
 #endif

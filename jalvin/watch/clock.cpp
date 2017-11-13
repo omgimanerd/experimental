@@ -15,14 +15,34 @@ const char DAY_NAME[7][10] = {
   "Saturday"
 };
 
+// long lastWakeTime;
+// DateTime now;
+//
+// void updateClockFace(DateTime t, bool wake) {
+//   now = t;
+//   if (wake) {
+//     lastWakeTime = millis();
+//   }
+// }
+//
+// void displayClockFace(Adafruit_SSD1306 display) {
+//   // long deltaTime = millis() - lastWakeTime;
+//   // if (deltaTime > WAKE_LENGTH_MS) {
+//   //   setContrast(&display, 255 - (deltaTime - WAKE_LENGTH_MS));
+//   // }
+//   displayAnalogClock(display, now);
+// }
+
 /// Given the display struct and the current DateTime struct, this function
 /// draws an analog clock and displays other relevant time information on the
 /// face of the display.
-void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
+void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
   // Some basic math for drawing the clock hands.
   short handLocations[2][2];
-  float minutes_rad = t.minute() * (TAU / 60.0);
-  float hours_rad = (t.hour() * (TAU / 12.0)) + (minutes_rad / 12.0);
+  short h = now.hour();
+  short m = now.minute();
+  float minutes_rad = m * (TAU / 60.0);
+  float hours_rad = (h * (TAU / 12.0)) + (minutes_rad / 12.0);
 
   // Minute hand X
   handLocations[0][0] = CLOCK_X + sin(minutes_rad) * MINUTE_HAND_LENGTH;
@@ -59,18 +79,17 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime t) {
   display.setTextSize(1);
   display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
-  display.println(DAY_NAME[t.dayOfTheWeek()]);
+  display.println(DAY_NAME[now.dayOfTheWeek()]);
 
   // Display the date.
   char dateBuffer[DATE_BUFFER_SIZE];
-  sprintf(dateBuffer, "%02d/%02d/%04d", t.month(), t.day(), t.year());
+  sprintf(dateBuffer, "%02d/%02d/%04d", now.month(), now.day(), now.year());
   display.setCursor(DATE_X, DATE_Y);
   display.print(dateBuffer);
 
   // Display the time.
   char timeBuffer[TIME_BUFFER_SIZE];
-  short h = t.hour();
-  sprintf(timeBuffer, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, t.minute());
+  sprintf(timeBuffer, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, m);
   display.setTextSize(2);
   display.setCursor(TIME_X, TIME_Y);
   display.print(timeBuffer);
