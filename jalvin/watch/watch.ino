@@ -107,6 +107,9 @@ void loop() {
 
   if (isMode(potentiometer, CALENDAR_MODE)) {
     Serial.print(F("CALENDAR "));
+    display.setTextSize(1);
+    display.setCursor(0, 5);
+    display.print(F("Calendar"));
     // displayCalendar(display);
   }
 
