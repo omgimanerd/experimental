@@ -59,7 +59,7 @@ void displayStopwatch(Adafruit_SSD1306 display) {
 
   display.setCursor(0, 5);
   display.setTextSize(1);
-  display.print("Stopwatch");
+  display.print(F("Stopwatch"));
 
   display.setCursor(STOPWATCH_M_S_X, STOPWATCH_M_S_Y);
   display.setTextSize(2);

@@ -8,7 +8,7 @@
 
 // #include "calendar.h"
 #include "clock.h"
-// #include "stopwatch.h"
+#include "stopwatch.h"
 
 #define LASER          2
 #define RIGHT_BUTTON   3
@@ -32,20 +32,15 @@
 Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
 RTC_DS3231 rtc;
 
-/// Holds the current potentiometer value.
-short potentiometer = 0;
-
 /// Miscellaneous state variables
 bool screenOff = false;
 short laserSquiggles = 0;
-float batteryLevel, voltage;
 
 /// Button state trackers.
-bool buttonPins[3] = { LEFT_BUTTON, MIDDLE_BUTTON, RIGHT_BUTTON };
 bool buttons[3][3];
 
 /// Holds the potentiometer interval ranges for the watch modes.
-int MODE_INTERVALS[5][2] = {
+short MODE_INTERVALS[5][2] = {
   { 0, 200 },
   { 201, 400 },
   { 401, 600 },
@@ -54,7 +49,7 @@ int MODE_INTERVALS[5][2] = {
 };
 
 /// Returns whether or not the watch is set in a certain mode.
-bool isMode(short mode) {
+bool isMode(short potentiometer, short mode) {
   return MODE_INTERVALS[mode][0] <= potentiometer &&
     potentiometer <= MODE_INTERVALS[mode][1];
 }
@@ -62,18 +57,13 @@ bool isMode(short mode) {
 /// Updates the variables storing the state of the buttons and the toggle
 /// state of the buttons.
 void updateButtonStates() {
+  byte buttonPins[3] = { LEFT_BUTTON, MIDDLE_BUTTON, RIGHT_BUTTON };
   for (byte i = 0; i < 3; ++i) {
     buttons[i][STATE] = digitalRead(buttonPins[i]) == LOW;
     buttons[i][TOGGLE] = buttons[i][STATE] &&
       (buttons[i][STATE] != buttons[i][LAST]);
     buttons[i][LAST] = buttons[i][STATE];
   }
-}
-
-void displayTitle(const char* title) {
-  display.setTextSize(1);
-  display.setCursor(0, 5);
-  display.print(title);
 }
 
 /// Function called by Arduino to once at the start to initialize variables.
@@ -98,38 +88,43 @@ void setup() {
 /// Function called by Arduino to update state.
 void loop() {
   DateTime now = rtc.now();
-  potentiometer = analogRead(POTENTIOMETER);
-  batteryLevel = analogRead(BATTERY);
-  voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
+  short potentiometer = analogRead(POTENTIOMETER);
+  float batteryLevel = analogRead(BATTERY);
+  float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
 
   updateButtonStates();
-  // updateStopwatch();
+  updateStopwatch();
 
   // All the modes are guaranteed to be mutually exclusive so their code will
   // never overlap.
-  if (isMode(CLOCK_MODE)) {
+  if (isMode(potentiometer, CLOCK_MODE)) {
+    Serial.print(F("CLOCK "));
     if (!screenOff) {
       displayAnalogClock(display, now);
     }
     screenOff = buttons[LEFT][TOGGLE] ? !screenOff : screenOff;
   }
 
-  if (isMode(CALENDAR_MODE)) {
-    // displayTitle("Calendar");
+  if (isMode(potentiometer, CALENDAR_MODE)) {
+    Serial.print(F("CALENDAR "));
     // displayCalendar(display);
   }
 
-  if (isMode(STOPWATCH_MODE)) {
-    // if (leftButton[TOGGLE]) {
-    //   toggleStopwatch();
-    // } else if (rightButton[TOGGLE]) {
-    //   resetStopwatch();
-    // }
-    // displayStopwatch(display);
+  if (isMode(potentiometer, STOPWATCH_MODE)) {
+    Serial.print(F("STOPWATCH "));
+    if (buttons[LEFT][TOGGLE]) {
+      toggleStopwatch();
+    } else if (buttons[RIGHT][TOGGLE]) {
+      resetStopwatch();
+    }
+    displayStopwatch(display);
   }
 
-  if (isMode(LASER_MODE)) {
-    displayTitle("Laser");
+  if (isMode(potentiometer, LASER_MODE)) {
+    Serial.print(F("LASER "));
+    display.setTextSize(1);
+    display.setCursor(0, 5);
+    display.print(F("Laser"));
     display.setCursor(0, 30);
     display.setTextSize(2);
     display.print(buttons[LEFT][STATE] ? "ON" : "OFF");
@@ -145,8 +140,11 @@ void loop() {
     digitalWrite(LASER, LOW);
   }
 
-  if (isMode(VOLTAGE_MODE)) {
-    displayTitle("Battery Voltage");
+  if (isMode(potentiometer, VOLTAGE_MODE)) {
+    Serial.print(F("VOLTAGE "));
+    display.setTextSize(1);
+    display.setCursor(0, 5);
+    display.print(F("Battery Voltage"));
     display.setCursor(0, 30);
     display.setTextSize(2);
     display.print(voltage);

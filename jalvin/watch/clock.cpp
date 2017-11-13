@@ -15,24 +15,6 @@ const char DAY_NAME[7][10] = {
   "Saturday"
 };
 
-// long lastWakeTime;
-// DateTime now;
-//
-// void updateClockFace(DateTime t, bool wake) {
-//   now = t;
-//   if (wake) {
-//     lastWakeTime = millis();
-//   }
-// }
-//
-// void displayClockFace(Adafruit_SSD1306 display) {
-//   // long deltaTime = millis() - lastWakeTime;
-//   // if (deltaTime > WAKE_LENGTH_MS) {
-//   //   setContrast(&display, 255 - (deltaTime - WAKE_LENGTH_MS));
-//   // }
-//   displayAnalogClock(display, now);
-// }
-
 /// Given the display struct and the current DateTime struct, this function
 /// draws an analog clock and displays other relevant time information on the
 /// face of the display.
@@ -58,7 +40,7 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
   display.fillCircle(CLOCK_X, CLOCK_Y, 1, WHITE);
 
   // Draw the ticks around the clock face.
-  for (int i = 0; i < 12; i++) {
+  for (short i = 0; i < 12; i++) {
     float rad = i * (TAU / 12);
     short x1 = CLOCK_X + sin(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
     short y1 = CLOCK_Y - cos(rad) * (CLOCK_RADIUS - TICK_DISTANCE);
