@@ -8,13 +8,16 @@
 
 #include "clock.h"
 
-const PROGMEM char DAY_NAME[7][10] = {
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Friday",
-  "Saturday"
+const char SUNDAY[] PROGMEM    = "Sunday";
+const char MONDAY[] PROGMEM    = "Monday";
+const char TUESDAY[] PROGMEM   = "Tuesday";
+const char WEDNESDAY[] PROGMEM = "Wednesday";
+const char THURSDAY[] PROGMEM  = "Thursday";
+const char FRIDAY[] PROGMEM    = "Friday";
+const char SATURDAY[] PROGMEM  = "Saturday";
+
+const char* const DAY_NAME[] PROGMEM = {
+  SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
 };
 
 static bool screenOn = true;

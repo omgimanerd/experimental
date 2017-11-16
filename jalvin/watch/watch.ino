@@ -97,10 +97,7 @@ void loop() {
   }
 
   if (mode == CALENDAR_MODE) {
-    display.setTextSize(1);
-    display.setCursor(0, 5);
-    display.print(F("Calendar"));
-    // displayCalendar(display);
+    displayCalendar(display);
   }
 
   if (mode == STOPWATCH_MODE) {
