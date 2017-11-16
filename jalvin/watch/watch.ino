@@ -6,54 +6,36 @@
 
 #include "constants.h"
 
-// #include "calendar.h"
+#include "calendar.h"
 #include "clock.h"
 #include "stopwatch.h"
+#include "timer.h"
 
-#define LASER          2
-#define RIGHT_BUTTON   3
-#define MIDDLE_BUTTON  5
-#define LEFT_BUTTON    6
-#define OLED_MOSI      9
-#define OLED_CLK      10
-#define OLED_DC       11
-#define OLED_CS       12
-#define OLED_RESET    13
-#define POTENTIOMETER A0
-#define BATTERY       A1
+#define LASER            2
+#define LEFT_BUTTON      3
+#define RIGHT_BUTTON     5
+#define OLED_RESET       4
+#define MIDDLE_BUTTON    6
+#define POTENTIOMETER   A0
+#define BATTERY         A1
 
-#define CLOCK_MODE     0
-#define CALENDAR_MODE  1
-#define STOPWATCH_MODE 2
-#define LASER_MODE     3
-#define VOLTAGE_MODE   4
+#define CLOCK_MODE       0
+#define CALENDAR_MODE    1
+#define STOPWATCH_MODE   2
+#define TIMER_MODE       3
+#define LASER_MODE       4
+#define VOLTAGE_MODE     5
+#define MODE_INTERVALS 171
 
 /// Globals for holding the module structs.
-Adafruit_SSD1306 display(OLED_MOSI, OLED_CLK, OLED_DC, OLED_RESET, OLED_CS);
+Adafruit_SSD1306 display(OLED_RESET);
 RTC_DS3231 rtc;
 
 /// Miscellaneous state variables
-bool screenOff = false;
 short laserSquiggles = 0;
 
 /// Button state trackers.
 bool buttons[3][3];
-
-/// Holds the potentiometer interval ranges for the watch modes.
-const PROGMEM short MODE_INTERVALS[5][2] = {
-  { 0, 200 },
-  { 201, 400 },
-  { 401, 600 },
-  { 601, 800 },
-  { 801, 1024 }
-};
-
-/// Returns whether or not the watch is set in a certain mode.
-bool isMode(short potentiometer, short mode) {
-  short low = pgm_read_word(&(MODE_INTERVALS[mode][0]));
-  short high = pgm_read_word(&(MODE_INTERVALS[mode][1]));
-  return low <= potentiometer && potentiometer <= high;
-}
 
 /// Updates the variables storing the state of the buttons and the toggle
 /// state of the buttons.
@@ -75,7 +57,7 @@ void setup() {
   pinMode(MIDDLE_BUTTON, INPUT);
   pinMode(RIGHT_BUTTON, INPUT);
 
-  display.begin(SSD1306_SWITCHCAPVCC);
+  display.begin(SSD1306_SWITCHCAPVCC, 0x3D);
   display.setTextColor(WHITE);
   display.clearDisplay();
 
@@ -92,40 +74,37 @@ void loop() {
   short potentiometer = analogRead(POTENTIOMETER);
   float batteryLevel = analogRead(BATTERY);
   float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
+  byte mode = potentiometer / MODE_INTERVALS;
 
   updateButtonStates();
   updateStopwatch();
+  updateTimer();
 
   // All the modes are guaranteed to be mutually exclusive so their code will
   // never overlap.
-  if (isMode(potentiometer, CLOCK_MODE)) {
-    Serial.print(F("CLOCK "));
-    if (!screenOff) {
-      displayAnalogClock(display, now);
-    }
-    screenOff = buttons[LEFT][TOGGLE] ? !screenOff : screenOff;
+  if (mode == CLOCK_MODE) {
+    updateClockOnInput(buttons);
+    displayClock(display, now);
   }
 
-  if (isMode(potentiometer, CALENDAR_MODE)) {
-    Serial.print(F("CALENDAR "));
+  if (mode == CALENDAR_MODE) {
     display.setTextSize(1);
     display.setCursor(0, 5);
     display.print(F("Calendar"));
     // displayCalendar(display);
   }
 
-  if (isMode(potentiometer, STOPWATCH_MODE)) {
-    Serial.print(F("STOPWATCH "));
-    if (buttons[LEFT][TOGGLE]) {
-      toggleStopwatch();
-    } else if (buttons[RIGHT][TOGGLE]) {
-      resetStopwatch();
-    }
+  if (mode == STOPWATCH_MODE) {
+    updateStopwatchOnInput(buttons);
     displayStopwatch(display);
   }
 
-  if (isMode(potentiometer, LASER_MODE)) {
-    Serial.print(F("LASER "));
+  if (mode == TIMER_MODE) {
+    updateTimerOnInput(buttons);
+    displayTimer(display);
+  }
+
+  if (mode == LASER_MODE) {
     display.setTextSize(1);
     display.setCursor(0, 5);
     display.print(F("Laser"));
@@ -144,8 +123,7 @@ void loop() {
     digitalWrite(LASER, LOW);
   }
 
-  if (isMode(potentiometer, VOLTAGE_MODE)) {
-    Serial.print(F("VOLTAGE "));
+  if (mode == VOLTAGE_MODE) {
     display.setTextSize(1);
     display.setCursor(0, 5);
     display.print(F("Battery Voltage"));
@@ -154,8 +132,6 @@ void loop() {
     display.print(voltage);
     display.println(F("V"));
   }
-
-  Serial.println(potentiometer);
 
   display.display();
   display.clearDisplay();

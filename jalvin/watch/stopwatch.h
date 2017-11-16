@@ -12,10 +12,11 @@
 #define TIME_BUFFER_SIZE  9
 
 void startStopwatch();
-void updateStopwatch();
 void pauseStopwatch();
 void resetStopwatch();
-void toggleStopwatch();
+
+void updateStopwatch();
+void updateStopwatchOnInput(bool buttons[3][3]);
 void displayStopwatch(Adafruit_SSD1306 display);
 
 #endif

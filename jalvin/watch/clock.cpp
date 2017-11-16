@@ -4,6 +4,8 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 
+#include "constants.h"
+
 #include "clock.h"
 
 const PROGMEM char DAY_NAME[7][10] = {
@@ -14,6 +16,22 @@ const PROGMEM char DAY_NAME[7][10] = {
   "Friday",
   "Saturday"
 };
+
+bool screenOn = true;
+
+void updateClockOnInput(bool buttons[3][3]) {
+  if (buttons[LEFT][TOGGLE] ||
+      buttons[MIDDLE][TOGGLE] ||
+      buttons[RIGHT][TOGGLE]) {
+    screenOn = !screenOn;
+  }
+}
+
+void displayClock(Adafruit_SSD1306 display, DateTime now) {
+  if (screenOn) {
+    displayAnalogClock(display, now);
+  }
+}
 
 /// Given the display struct and the current DateTime struct, this function
 /// draws an analog clock and displays other relevant time information on the
