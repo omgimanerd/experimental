@@ -8,9 +8,9 @@
 
 #include "stopwatch.h"
 
-bool stopWatchRunning = false;
-long timeStarted = -1;
-long timePassed = 0;
+static bool stopWatchRunning = false;
+static long timeStarted = -1;
+static long timePassed = 0;
 
 /// Starts/resumes the stopwatch.
 void startStopwatch() {
@@ -41,7 +41,7 @@ void updateStopwatch() {
   }
 }
 
-void updateStopwatchOnInput(bool buttons[3][3]) {
+void updateStopwatchOnInput(bool buttons[3][4]) {
   if (buttons[MIDDLE][TOGGLE]) {
     if (stopWatchRunning) {
       pauseStopwatch();

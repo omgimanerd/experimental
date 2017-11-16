@@ -4,8 +4,6 @@
 #ifndef CLOCK_H
 #define CLOCK_H
 
-#define TAU              6.28
-
 #define CLOCK_RADIUS       30
 #define CLOCK_X            30
 #define CLOCK_Y            31
@@ -13,8 +11,6 @@
 #define MINUTE_HAND_LENGTH 20
 #define TICK_DISTANCE       3
 #define TICK_LENGTH         2
-
-#define WAKE_LENGTH_MS   5000
 
 #define DAY_OF_WEEK_X      68
 #define DAY_OF_WEEK_Y      12
@@ -26,7 +22,7 @@
 #define DATE_BUFFER_SIZE   11
 #define TIME_BUFFER_SIZE    6
 
-void updateClockOnInput(bool buttons[3][3]);
+void updateClockOnInput(bool buttons[3][4]);
 void displayClock(Adafruit_SSD1306 display, DateTime now);
 void displayAnalogClock(Adafruit_SSD1306 display, DateTime now);
 

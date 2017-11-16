@@ -11,14 +11,6 @@
 #include "stopwatch.h"
 #include "timer.h"
 
-#define LASER            2
-#define LEFT_BUTTON      3
-#define RIGHT_BUTTON     5
-#define OLED_RESET       4
-#define MIDDLE_BUTTON    6
-#define POTENTIOMETER   A0
-#define BATTERY         A1
-
 #define CLOCK_MODE       0
 #define CALENDAR_MODE    1
 #define STOPWATCH_MODE   2
@@ -33,9 +25,12 @@ RTC_DS3231 rtc;
 
 /// Miscellaneous state variables
 short laserSquiggles = 0;
+unsigned long currentTime;
+unsigned long lastUpdateTime;
+unsigned int deltaTime;
 
 /// Button state trackers.
-bool buttons[3][3];
+bool buttons[3][4];
 
 /// Updates the variables storing the state of the buttons and the toggle
 /// state of the buttons.
@@ -46,6 +41,11 @@ void updateButtonStates() {
     buttons[i][TOGGLE] = buttons[i][STATE] &&
       (buttons[i][STATE] != buttons[i][LAST]);
     buttons[i][LAST] = buttons[i][STATE];
+    if (buttons[i][STATE]) {
+      buttons[i][HOLD] += deltaTime;
+    } else {
+      buttons[i][HOLD] = 0;
+    }
   }
 }
 
@@ -66,6 +66,8 @@ void setup() {
   if (rtc.lostPower()) {
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
+
+  lastUpdateTime = millis();
 }
 
 /// Function called by Arduino to update state.
@@ -75,6 +77,9 @@ void loop() {
   float batteryLevel = analogRead(BATTERY);
   float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
   byte mode = potentiometer / MODE_INTERVALS;
+
+  currentTime = millis();
+  deltaTime = currentTime - lastUpdateTime;
 
   updateButtonStates();
   updateStopwatch();
@@ -110,15 +115,20 @@ void loop() {
     display.print(F("Laser"));
     display.setCursor(0, 30);
     display.setTextSize(2);
-    display.print(buttons[LEFT][STATE] ? F("ON") : F("OFF"));
-    display.setCursor(25, 35);
-    if (buttons[LEFT][STATE]) {
+    display.setCursor(20, 35);
+    if (buttons[LEFT][STATE] ||
+        buttons[MIDDLE][STATE] ||
+        buttons[RIGHT][STATE]) {
+      display.print(F("ON"));
       for (int i = 0; i < laserSquiggles; ++i) {
         display.print("~");
       }
       laserSquiggles = (laserSquiggles + 1) % 8;
+      digitalWrite(LASER, HIGH);
+    } else {
+      display.print(F("OFF"));
+      digitalWrite(LASER, LOW);
     }
-    digitalWrite(LASER, buttons[LEFT][STATE] ? HIGH : LOW);
   } else {
     digitalWrite(LASER, LOW);
   }
@@ -135,4 +145,6 @@ void loop() {
 
   display.display();
   display.clearDisplay();
+
+  lastUpdateTime = currentTime;
 }

@@ -17,9 +17,9 @@ const PROGMEM char DAY_NAME[7][10] = {
   "Saturday"
 };
 
-bool screenOn = true;
+static bool screenOn = true;
 
-void updateClockOnInput(bool buttons[3][3]) {
+void updateClockOnInput(bool buttons[3][4]) {
   if (buttons[LEFT][TOGGLE] ||
       buttons[MIDDLE][TOGGLE] ||
       buttons[RIGHT][TOGGLE]) {
@@ -79,7 +79,7 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
   display.setTextSize(1);
   display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
-  display.println(pgm_read_word(&(DAY_NAME[now.dayOfTheWeek()])));
+  display.println((char *) pgm_read_word(&(DAY_NAME[now.dayOfTheWeek()])));
 
   // Display the date.
   char dateBuffer[DATE_BUFFER_SIZE];

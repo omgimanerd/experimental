@@ -7,13 +7,16 @@
 
 #include "timer.h"
 
-bool timerRunning = false;
-long timerMilliseconds = 0;
-long lastUpdateTime = 0;
+static bool timerRunning = false;
+static long timerMilliseconds = 0;
+static long lastUpdateTime = 0;
+static long lastVibrateTime = 0;
 
 void startTimer() {
-  timerRunning = true;
-  lastUpdateTime = millis();
+  if (timerMilliseconds != 0) {
+    timerRunning = true;
+    lastUpdateTime = millis();
+  }
 }
 
 void pauseTimer() {
@@ -38,18 +41,25 @@ void resetTimer() {
 }
 
 void updateTimer() {
+  unsigned long currentTime = millis();
+  int deltaTime = currentTime - lastUpdateTime;
   if (timerRunning) {
-    short deltaTime = millis() - lastUpdateTime;
     timerMilliseconds -= deltaTime;
     if (timerMilliseconds < 0) {
       timerMilliseconds = 0;
       timerRunning = false;
+      lastVibrateTime = currentTime;
     }
   }
-  lastUpdateTime = millis();
+  if (currentTime - lastVibrateTime < VIBRATE_DURATION) {
+    digitalWrite(VIBRATION_MOTOR, HIGH);
+  } else {
+    digitalWrite(VIBRATION_MOTOR, LOW);
+  }
+  lastUpdateTime = currentTime;
 }
 
-void updateTimerOnInput(bool buttons[3][3]) {
+void updateTimerOnInput(bool buttons[3][4]) {
   if (buttons[MIDDLE][TOGGLE]) {
     if (timerRunning) {
       pauseTimer();
