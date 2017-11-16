@@ -40,7 +40,7 @@ short laserSquiggles = 0;
 bool buttons[3][3];
 
 /// Holds the potentiometer interval ranges for the watch modes.
-short MODE_INTERVALS[5][2] = {
+const PROGMEM short MODE_INTERVALS[5][2] = {
   { 0, 200 },
   { 201, 400 },
   { 401, 600 },
@@ -50,8 +50,9 @@ short MODE_INTERVALS[5][2] = {
 
 /// Returns whether or not the watch is set in a certain mode.
 bool isMode(short potentiometer, short mode) {
-  return MODE_INTERVALS[mode][0] <= potentiometer &&
-    potentiometer <= MODE_INTERVALS[mode][1];
+  short low = pgm_read_word(&(MODE_INTERVALS[mode][0]));
+  short high = pgm_read_word(&(MODE_INTERVALS[mode][1]));
+  return low <= potentiometer && potentiometer <= high;
 }
 
 /// Updates the variables storing the state of the buttons and the toggle
@@ -130,7 +131,7 @@ void loop() {
     display.print(F("Laser"));
     display.setCursor(0, 30);
     display.setTextSize(2);
-    display.print(buttons[LEFT][STATE] ? "ON" : "OFF");
+    display.print(buttons[LEFT][STATE] ? F("ON") : F("OFF"));
     display.setCursor(25, 35);
     if (buttons[LEFT][STATE]) {
       for (int i = 0; i < laserSquiggles; ++i) {
@@ -151,7 +152,7 @@ void loop() {
     display.setCursor(0, 30);
     display.setTextSize(2);
     display.print(voltage);
-    display.println("V");
+    display.println(F("V"));
   }
 
   Serial.println(potentiometer);
