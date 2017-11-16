@@ -9,8 +9,8 @@
 #include "stopwatch.h"
 
 static bool stopWatchRunning = false;
-static long timeStarted = -1;
-static long timePassed = 0;
+static unsigned long timeStarted = -1;
+static unsigned long timePassed = 0;
 
 /// Starts/resumes the stopwatch.
 void startStopwatch() {
@@ -33,14 +33,14 @@ void resetStopwatch() {
   }
 }
 
-/// Method called internally every update loop to update the stopwatch
-/// variables.
+/// Function called every update loop to update the stopwatch variables.
 void updateStopwatch() {
   if (stopWatchRunning) {
     timePassed = millis() - timeStarted;
   }
 }
 
+/// Updates the stopwatch's state based on the well-defined button state array.
 void updateStopwatchOnInput(bool buttons[BUTTONS][STATES]) {
   if (buttons[MIDDLE][ON_DOWN]) {
     if (stopWatchRunning) {
@@ -53,7 +53,7 @@ void updateStopwatchOnInput(bool buttons[BUTTONS][STATES]) {
   }
 }
 
-/// Draws the state of the stopwatch onto the face of the display.
+/// Draws the stopwatch onto the display.
 void displayStopwatch(Adafruit_SSD1306 display) {
   short milliseconds = timePassed % 1000;
   short seconds = (timePassed / 1000) % 60;

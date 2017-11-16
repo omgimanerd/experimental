@@ -5,7 +5,7 @@
 
 #include "calendar.h"
 
-long lastCalendarUpdate = 0;
+static unsigned long lastCalendarUpdate = 0;
 
 /// Updates the calendar if necessary.
 void updateCalendar() {

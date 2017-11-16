@@ -8,10 +8,11 @@
 #include "timer.h"
 
 static bool timerRunning = false;
-static long timerMilliseconds = 0;
-static long lastUpdateTime = 0;
-static long lastVibrateTime = 0;
+static unsigned long timerMilliseconds = 0;
+static unsigned long lastUpdateTime = 0;
+static unsigned long lastVibrateTime = 0;
 
+/// Starts/resumes the timer.
 void startTimer() {
   if (timerMilliseconds != 0) {
     timerRunning = true;
@@ -19,14 +20,17 @@ void startTimer() {
   }
 }
 
+/// Pauses the timer.
 void pauseTimer() {
   timerRunning = false;
 }
 
+/// Increments the timer value.
 void incrementTimer() {
   timerMilliseconds += 1000;
 }
 
+/// Decrements the timer value.
 void decrementTimer() {
   timerMilliseconds -= 1000;
   if (timerMilliseconds < 0) {
@@ -34,12 +38,14 @@ void decrementTimer() {
   }
 }
 
+/// Resets the timer back to 0.
 void resetTimer() {
   if (!timerRunning) {
     timerMilliseconds = 0;
   }
 }
 
+/// Function called every update loop to update the timer variables.
 void updateTimer() {
   unsigned long currentTime = millis();
   int deltaTime = currentTime - lastUpdateTime;
@@ -59,6 +65,7 @@ void updateTimer() {
   lastUpdateTime = currentTime;
 }
 
+/// Updates the timer's state based on the well-defined button state array.
 void updateTimerOnInput(bool buttons[BUTTONS][STATES]) {
   if (buttons[MIDDLE][ON_UP]) {
     if (timerRunning) {
@@ -77,6 +84,7 @@ void updateTimerOnInput(bool buttons[BUTTONS][STATES]) {
   }
 }
 
+/// Draws the timer onto the display.
 void displayTimer(Adafruit_SSD1306 display) {
   short milliseconds = timerMilliseconds % 1000;
   short seconds = (timerMilliseconds / 1000) % 60;

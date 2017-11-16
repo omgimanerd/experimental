@@ -92,6 +92,8 @@ void loop() {
   if (mode == CLOCK_MODE) {
     updateClockOnInput(buttons);
     displayClock(display, now);
+  } else {
+    turnOnClockScreen();
   }
 
   if (mode == CALENDAR_MODE) {

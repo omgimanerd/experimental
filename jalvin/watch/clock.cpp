@@ -19,6 +19,13 @@ const PROGMEM char DAY_NAME[7][10] = {
 
 static bool screenOn = true;
 
+/// Turns on the screen, only used the potentiometer is turned to a non-clock
+/// mode.
+void turnOnClockScreen() {
+  screenOn = true;
+}
+
+/// Turns the screen on or off based on the well-defined button state array.
 void updateClockOnInput(bool buttons[BUTTONS][STATES]) {
   if (buttons[LEFT][ON_DOWN] ||
       buttons[MIDDLE][ON_DOWN] ||
@@ -27,6 +34,7 @@ void updateClockOnInput(bool buttons[BUTTONS][STATES]) {
   }
 }
 
+/// Displays the analog clock if the screen has been turned on.
 void displayClock(Adafruit_SSD1306 display, DateTime now) {
   if (screenOn) {
     displayAnalogClock(display, now);

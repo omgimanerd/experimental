@@ -8,7 +8,7 @@
 #define TAU           6.28
 #define VOLTAGE_MAX    3.3
 
-// Pins of connected modules
+// Pins of connected components.
 #define LASER            2
 #define LEFT_BUTTON      3
 #define RIGHT_BUTTON     5
@@ -18,12 +18,15 @@
 #define POTENTIOMETER   A0
 #define BATTERY         A1
 
-// For button states and index in the array
+// For button states and their indexes in the array.
 #define BUTTONS          3
 #define LEFT             0
 #define MIDDLE           1
 #define RIGHT            2
 
+// The different states that the buttons can be in. This is well-defined so that
+// each individual module can assume the button state array's existence and
+// use its values.
 #define STATES           5
 #define STATE            0
 #define ON_DOWN          1
