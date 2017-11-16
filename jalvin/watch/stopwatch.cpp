@@ -41,14 +41,14 @@ void updateStopwatch() {
   }
 }
 
-void updateStopwatchOnInput(bool buttons[3][4]) {
-  if (buttons[MIDDLE][TOGGLE]) {
+void updateStopwatchOnInput(bool buttons[BUTTONS][STATES]) {
+  if (buttons[MIDDLE][ON_DOWN]) {
     if (stopWatchRunning) {
       pauseStopwatch();
     } else {
       startStopwatch();
     }
-  } else if (buttons[LEFT][TOGGLE]) {
+  } else if (buttons[LEFT][ON_DOWN]) {
     resetStopwatch();
   }
 }

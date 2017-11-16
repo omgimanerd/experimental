@@ -22,7 +22,7 @@ void decrementTimer();
 void resetTimer();
 
 void updateTimer();
-void updateTimerOnInput(bool buttons[3][4]);
+void updateTimerOnInput(bool buttons[BUTTONS][STATES]);
 void displayTimer(Adafruit_SSD1306 display);
 
 #endif TIMER_H

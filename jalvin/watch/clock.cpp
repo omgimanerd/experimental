@@ -19,10 +19,10 @@ const PROGMEM char DAY_NAME[7][10] = {
 
 static bool screenOn = true;
 
-void updateClockOnInput(bool buttons[3][4]) {
-  if (buttons[LEFT][TOGGLE] ||
-      buttons[MIDDLE][TOGGLE] ||
-      buttons[RIGHT][TOGGLE]) {
+void updateClockOnInput(bool buttons[BUTTONS][STATES]) {
+  if (buttons[LEFT][ON_DOWN] ||
+      buttons[MIDDLE][ON_DOWN] ||
+      buttons[RIGHT][ON_DOWN]) {
     screenOn = !screenOn;
   }
 }

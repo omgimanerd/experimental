@@ -59,18 +59,19 @@ void updateTimer() {
   lastUpdateTime = currentTime;
 }
 
-void updateTimerOnInput(bool buttons[3][4]) {
-  if (buttons[MIDDLE][TOGGLE]) {
+void updateTimerOnInput(bool buttons[BUTTONS][STATES]) {
+  if (buttons[MIDDLE][ON_UP]) {
     if (timerRunning) {
       pauseTimer();
     } else {
       startTimer();
     }
-  }
-  if (!timerRunning) {
-    if (buttons[LEFT][TOGGLE]) {
+  } else if (buttons[MIDDLE][HOLD] > RESET_HOLD_TIME) {
+    resetTimer();
+  } else if (!timerRunning) {
+    if (buttons[LEFT][ON_DOWN]) {
       decrementTimer();
-    } else if (buttons[RIGHT][TOGGLE]) {
+    } else if (buttons[RIGHT][ON_DOWN]) {
       incrementTimer();
     }
   }

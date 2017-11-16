@@ -30,22 +30,24 @@ unsigned long lastUpdateTime;
 unsigned int deltaTime;
 
 /// Button state trackers.
-bool buttons[3][4];
+bool buttons[BUTTONS][STATES];
 
-/// Updates the variables storing the state of the buttons and the toggle
+/// Updates the variables storing the state of the buttons and the ON_DOWN
 /// state of the buttons.
 void updateButtonStates() {
-  byte buttonPins[3] = { LEFT_BUTTON, MIDDLE_BUTTON, RIGHT_BUTTON };
-  for (byte i = 0; i < 3; ++i) {
+  byte buttonPins[BUTTONS] = { LEFT_BUTTON, MIDDLE_BUTTON, RIGHT_BUTTON };
+  for (byte i = 0; i < BUTTONS; ++i) {
     buttons[i][STATE] = digitalRead(buttonPins[i]) == LOW;
-    buttons[i][TOGGLE] = buttons[i][STATE] &&
+    buttons[i][ON_DOWN] = buttons[i][STATE] &&
       (buttons[i][STATE] != buttons[i][LAST]);
-    buttons[i][LAST] = buttons[i][STATE];
+    buttons[i][ON_UP] = !buttons[i][STATE] &&
+      (buttons[i][STATE] != buttons[i][LAST]);
     if (buttons[i][STATE]) {
       buttons[i][HOLD] += deltaTime;
-    } else {
+    } else if (!buttons[i][ON_UP]) {
       buttons[i][HOLD] = 0;
     }
+    buttons[i][LAST] = buttons[i][STATE];
   }
 }
 

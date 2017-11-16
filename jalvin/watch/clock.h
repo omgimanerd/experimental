@@ -22,7 +22,7 @@
 #define DATE_BUFFER_SIZE   11
 #define TIME_BUFFER_SIZE    6
 
-void updateClockOnInput(bool buttons[3][4]);
+void updateClockOnInput(bool buttons[BUTTONS][STATES]);
 void displayClock(Adafruit_SSD1306 display, DateTime now);
 void displayAnalogClock(Adafruit_SSD1306 display, DateTime now);
 
