@@ -12,6 +12,7 @@ static bool timerRunning = false;
 static unsigned long timerMilliseconds = 0;
 static unsigned long lastUpdateTime = 0;
 static unsigned long lastVibrateTime = 0;
+static unsigned long lastHoldTime = HOLD_INCR_DECR_TIME;
 
 /// Starts/resumes the timer.
 void startTimer() {
@@ -27,16 +28,16 @@ void pauseTimer() {
 }
 
 /// Increments the timer value.
-void incrementTimer() {
-  timerMilliseconds += 1000;
+void incrementTimer(unsigned int ms) {
+  timerMilliseconds += ms;
 }
 
 /// Decrements the timer value.
-void decrementTimer() {
-  if (timerMilliseconds < 1000) {
+void decrementTimer(unsigned int ms) {
+  if (timerMilliseconds < ms) {
     timerMilliseconds = 0;
   } else {
-    timerMilliseconds -= 1000;
+    timerMilliseconds -= ms;
   }
 }
 
@@ -77,10 +78,18 @@ void updateTimerOnInput(Button buttons[NUM_BUTTONS]) {
       startTimer();
     }
   } else if (!timerRunning) {
-    if (buttons[LEFT].onDown) {
-      decrementTimer();
-    } else if (buttons[RIGHT].onDown) {
+    if (buttons[LEFT].hold > lastHoldTime) {
+      decrementTimer(5000);
+      lastHoldTime += HOLD_INCR_DECR_INTERVAL;
+    } else if (buttons[LEFT].onUp) {
+      decrementTimer(1000);
+    } else if (buttons[RIGHT].hold) {
+      incrementTimer(5000);
+      lastHoldTime += HOLD_INCR_DECR_INTERVAL;
+    } else if (buttons[RIGHT].onUp) {
       incrementTimer();
+    } else {
+      lastHoldTime = HOLD_INCR_DECR_TIME;
     }
   }
 }
