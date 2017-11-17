@@ -8,6 +8,9 @@
 #define TAU           6.28
 #define VOLTAGE_MAX    3.3
 
+#define TITLE_TEXT_X     0
+#define TITLE_TEXT_Y     5
+
 // Pins of connected components.
 #define LASER            2
 #define LEFT_BUTTON      3

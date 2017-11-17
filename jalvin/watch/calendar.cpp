@@ -17,7 +17,6 @@ void updateCalendar() {
 }
 
 void displayCalendar(Adafruit_SSD1306 display) {
-  display.setTextSize(1);
-  display.setCursor(0, 5);
+  display.setCursor(TITLE_TEXT_X, TITLE_TEXT_Y);
   display.print(F("Calendar"));
 }

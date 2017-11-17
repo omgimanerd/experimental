@@ -87,7 +87,6 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
 
   // Display the day of the week.
   char dateBuffer[DATE_BUFFER_SIZE];
-  display.setTextSize(1);
   display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
   strcpy_P(dateBuffer, (char*) pgm_read_word(&(DAY_NAME[now.dayOfTheWeek()])));
@@ -107,4 +106,5 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
   display.setTextSize(2);
   display.setCursor(TIME_X, TIME_Y);
   display.print(timeBuffer);
+  display.setTextSize(1);
 }

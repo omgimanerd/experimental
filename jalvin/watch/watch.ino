@@ -102,12 +102,10 @@ void loop() {
   }
 
   if (mode == LASER_MODE) {
-    display.setTextSize(1);
-    display.setCursor(0, 5);
+    display.setCursor(TITLE_TEXT_X, TITLE_TEXT_Y);
     display.print(F("Laser"));
-    display.setCursor(0, 30);
     display.setTextSize(2);
-    display.setCursor(20, 35);
+    display.setCursor(0, 30);
     if (buttons[LEFT].state || buttons[MIDDLE].state || buttons[RIGHT].state) { display.print(F("ON"));
       for (int i = 0; i < laserSquiggles; ++i) {
         display.print("~");
@@ -118,18 +116,19 @@ void loop() {
       display.print(F("OFF"));
       digitalWrite(LASER, LOW);
     }
+    display.setTextSize(1);
   } else {
     digitalWrite(LASER, LOW);
   }
 
   if (mode == VOLTAGE_MODE) {
-    display.setTextSize(1);
-    display.setCursor(0, 5);
+    display.setCursor(TITLE_TEXT_X, TITLE_TEXT_Y);
     display.print(F("Battery Voltage"));
-    display.setCursor(0, 30);
     display.setTextSize(2);
+    display.setCursor(0, 30);
     display.print(voltage);
     display.println(F("V"));
+    display.setTextSize(1);
   }
 
   display.display();

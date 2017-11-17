@@ -12,9 +12,12 @@
 #define TIME_BUFFER_SIZE          9
 
 #define VIBRATE_DURATION       1000
+
 #define RESET_HOLD_TIME         500
 #define HOLD_INCR_DECR_TIME    1000
 #define HOLD_INCR_DECR_INTERVAL 500
+#define MAJOR_INCR_DECR_AMOUNT 5000
+#define MINOR_INCR_DECR_AMOUNT 1000
 
 void startTimer();
 void pauseTimer();

@@ -12,7 +12,7 @@ static bool timerRunning = false;
 static unsigned long timerMilliseconds = 0;
 static unsigned long lastUpdateTime = 0;
 static unsigned long lastVibrateTime = 0;
-static unsigned long lastHoldTime = HOLD_INCR_DECR_TIME;
+static unsigned int lastHoldTime = HOLD_INCR_DECR_TIME;
 
 /// Starts/resumes the timer.
 void startTimer() {
@@ -79,15 +79,15 @@ void updateTimerOnInput(Button buttons[NUM_BUTTONS]) {
     }
   } else if (!timerRunning) {
     if (buttons[LEFT].hold > lastHoldTime) {
-      decrementTimer(5000);
+      decrementTimer(MAJOR_INCR_DECR_AMOUNT);
       lastHoldTime += HOLD_INCR_DECR_INTERVAL;
     } else if (buttons[LEFT].onUp) {
-      decrementTimer(1000);
+      decrementTimer(MINOR_INCR_DECR_AMOUNT);
     } else if (buttons[RIGHT].hold) {
-      incrementTimer(5000);
+      incrementTimer(MAJOR_INCR_DECR_AMOUNT);
       lastHoldTime += HOLD_INCR_DECR_INTERVAL;
     } else if (buttons[RIGHT].onUp) {
-      incrementTimer(1000);
+      incrementTimer(MINOR_INCR_DECR_AMOUNT);
     } else {
       lastHoldTime = HOLD_INCR_DECR_TIME;
     }
@@ -102,8 +102,7 @@ void displayTimer(Adafruit_SSD1306 display) {
 
   char timeBuffer[TIME_BUFFER_SIZE];
 
-  display.setCursor(0, 5);
-  display.setTextSize(1);
+  display.setCursor(TITLE_TEXT_X, TITLE_TEXT_Y);
   display.print(F("Timer"));
 
   display.setCursor(TIMER_MS_X, TIMER_MS_Y);
