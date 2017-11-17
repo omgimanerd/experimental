@@ -50,11 +50,12 @@ void updateTimer() {
   unsigned long currentTime = millis();
   int deltaTime = currentTime - lastUpdateTime;
   if (timerRunning) {
-    timerMilliseconds -= deltaTime;
-    if (timerMilliseconds < 0) {
+    if (deltaTime > timerMilliseconds) {
       timerMilliseconds = 0;
       timerRunning = false;
       lastVibrateTime = currentTime;
+    } else {
+      timerMilliseconds -= deltaTime;
     }
   }
   if (currentTime - lastVibrateTime < VIBRATE_DURATION) {
