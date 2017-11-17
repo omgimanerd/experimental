@@ -3,6 +3,7 @@
 
 #include <Adafruit_SSD1306.h>
 
+#include "buttons.h"
 #include "constants.h"
 
 #include "timer.h"
@@ -32,17 +33,16 @@ void incrementTimer() {
 
 /// Decrements the timer value.
 void decrementTimer() {
-  timerMilliseconds -= 1000;
-  if (timerMilliseconds < 0) {
+  if (timerMilliseconds < 1000) {
     timerMilliseconds = 0;
+  } else {
+    timerMilliseconds -= 1000;
   }
 }
 
 /// Resets the timer back to 0.
 void resetTimer() {
-  if (!timerRunning) {
-    timerMilliseconds = 0;
-  }
+  timerMilliseconds = 0;
 }
 
 /// Function called every update loop to update the timer variables.
@@ -67,19 +67,19 @@ void updateTimer() {
 }
 
 /// Updates the timer's state based on the well-defined button state array.
-void updateTimerOnInput(unsigned int buttons[BUTTONS][STATES]) {
-  if (buttons[MIDDLE][ON_UP]) {
+void updateTimerOnInput(Button buttons[NUM_BUTTONS]) {
+  if (buttons[MIDDLE].hold > RESET_HOLD_TIME) {
+    resetTimer();
+  } else if (buttons[MIDDLE].onUp) {
     if (timerRunning) {
       pauseTimer();
     } else {
       startTimer();
     }
-  } else if (buttons[MIDDLE][HOLD] > RESET_HOLD_TIME) {
-    resetTimer();
   } else if (!timerRunning) {
-    if (buttons[LEFT][ON_DOWN]) {
+    if (buttons[LEFT].onDown) {
       decrementTimer();
-    } else if (buttons[RIGHT][ON_DOWN]) {
+    } else if (buttons[RIGHT].onDown) {
       incrementTimer();
     }
   }

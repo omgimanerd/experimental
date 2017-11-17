@@ -4,6 +4,10 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 
+// buttons.h must come first because of retarded Arduino function prototyping.
+// If this header file is not included first, then the Button struct won't load
+// properly.
+#include "buttons.h"
 #include "constants.h"
 
 #include "calendar.h"
@@ -30,26 +34,11 @@ unsigned long lastUpdateTime;
 unsigned int deltaTime;
 
 /// Button state trackers.
-unsigned int buttons[BUTTONS][STATES];
-
-/// Updates the variables storing the state of the buttons and the ON_DOWN
-/// state of the buttons.
-void updateButtonStates() {
-  byte buttonPins[BUTTONS] = { LEFT_BUTTON, MIDDLE_BUTTON, RIGHT_BUTTON };
-  for (byte i = 0; i < BUTTONS; ++i) {
-    buttons[i][STATE] = digitalRead(buttonPins[i]) == LOW;
-    buttons[i][ON_DOWN] = buttons[i][STATE] &&
-      (buttons[i][STATE] != buttons[i][LAST]);
-    buttons[i][ON_UP] = !buttons[i][STATE] &&
-      (buttons[i][STATE] != buttons[i][LAST]);
-    if (buttons[i][STATE]) {
-      buttons[i][HOLD] += deltaTime;
-    } else if (!buttons[i][ON_UP]) {
-      buttons[i][HOLD] = 0;
-    }
-    buttons[i][LAST] = buttons[i][STATE];
-  }
-}
+Button buttons[NUM_BUTTONS] = {
+  { LEFT_BUTTON, 0, 0, 0, 0, 0 },
+  { MIDDLE_BUTTON, 0, 0, 0, 0, 0 },
+  { RIGHT_BUTTON, 0, 0, 0, 0, 0 }
+};
 
 /// Function called by Arduino to once at the start to initialize variables.
 void setup() {
@@ -83,7 +72,9 @@ void loop() {
   currentTime = millis();
   deltaTime = currentTime - lastUpdateTime;
 
-  updateButtonStates();
+  for (byte i = 0; i < NUM_BUTTONS; ++i) {
+    updateButtonState(&(buttons[i]), deltaTime);
+  }
   updateStopwatch();
   updateTimer();
 
@@ -117,10 +108,7 @@ void loop() {
     display.setCursor(0, 30);
     display.setTextSize(2);
     display.setCursor(20, 35);
-    if (buttons[LEFT][STATE] ||
-        buttons[MIDDLE][STATE] ||
-        buttons[RIGHT][STATE]) {
-      display.print(F("ON"));
+    if (buttons[LEFT].state || buttons[MIDDLE].state || buttons[RIGHT].state) { display.print(F("ON"));
       for (int i = 0; i < laserSquiggles; ++i) {
         display.print("~");
       }

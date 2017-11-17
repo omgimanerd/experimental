@@ -18,20 +18,10 @@
 #define POTENTIOMETER   A0
 #define BATTERY         A1
 
-// For button states and their indexes in the array.
-#define BUTTONS          3
+// For button states and their indexes in the array of button structs
+#define NUM_BUTTONS      3
 #define LEFT             0
 #define MIDDLE           1
 #define RIGHT            2
-
-// The different states that the buttons can be in. This is well-defined so that
-// each individual module can assume the button state array's existence and
-// use its values.
-#define STATES           5
-#define STATE            0
-#define ON_DOWN          1
-#define ON_UP            2
-#define HOLD             3
-#define LAST             4
 
 #endif CONSTANTS_H

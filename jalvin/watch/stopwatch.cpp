@@ -4,6 +4,7 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 
+#include "buttons.h"
 #include "constants.h"
 
 #include "stopwatch.h"
@@ -41,14 +42,14 @@ void updateStopwatch() {
 }
 
 /// Updates the stopwatch's state based on the well-defined button state array.
-void updateStopwatchOnInput(unsigned int buttons[BUTTONS][STATES]) {
-  if (buttons[MIDDLE][ON_DOWN]) {
+void updateStopwatchOnInput(Button buttons[NUM_BUTTONS]) {
+  if (buttons[MIDDLE].onDown) {
     if (stopWatchRunning) {
       pauseStopwatch();
     } else {
       startStopwatch();
     }
-  } else if (buttons[LEFT][ON_DOWN]) {
+  } else if (buttons[LEFT].onDown) {
     resetStopwatch();
   }
 }

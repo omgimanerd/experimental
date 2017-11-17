@@ -4,6 +4,7 @@
 #include <Adafruit_SSD1306.h>
 #include <RTClib.h>
 
+#include "buttons.h"
 #include "constants.h"
 
 #include "clock.h"
@@ -29,10 +30,8 @@ void turnOnClockScreen() {
 }
 
 /// Turns the screen on or off based on the well-defined button state array.
-void updateClockOnInput(unsigned int buttons[BUTTONS][STATES]) {
-  if (buttons[LEFT][ON_DOWN] ||
-      buttons[MIDDLE][ON_DOWN] ||
-      buttons[RIGHT][ON_DOWN]) {
+void updateClockOnInput(Button buttons[NUM_BUTTONS]) {
+  if (buttons[LEFT].onDown || buttons[MIDDLE].onDown || buttons[RIGHT].onDown) {
     screenOn = !screenOn;
   }
 }
@@ -87,20 +86,24 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
   }
 
   // Display the day of the week.
+  char dateBuffer[DATE_BUFFER_SIZE];
   display.setTextSize(1);
   display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
-  display.println((char *) pgm_read_word(&(DAY_NAME[now.dayOfTheWeek()])));
+  strcpy_P(dateBuffer, (char*) pgm_read_word(&(DAY_NAME[now.dayOfTheWeek()])));
+  display.println(dateBuffer);
 
   // Display the date.
-  char dateBuffer[DATE_BUFFER_SIZE];
   sprintf(dateBuffer, "%02d/%02d/%04d", now.month(), now.day(), now.year());
   display.setCursor(DATE_X, DATE_Y);
   display.print(dateBuffer);
 
   // Display the time.
   char timeBuffer[TIME_BUFFER_SIZE];
-  sprintf(timeBuffer, "%02d:%02d", h >= 13 && h <= 24 ? h - 12 : h, m);
+  if (h >= 13 && h <= 24) {
+    h -= 12;
+  }
+  sprintf(timeBuffer, "%02d:%02d", h ? h : 12, m);
   display.setTextSize(2);
   display.setCursor(TIME_X, TIME_Y);
   display.print(timeBuffer);

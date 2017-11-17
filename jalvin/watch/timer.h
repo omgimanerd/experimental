@@ -21,7 +21,7 @@ void incrementTimer();
 void decrementTimer();
 void resetTimer();
 void updateTimer();
-void updateTimerOnInput(unsigned int buttons[BUTTONS][STATES]);
+void updateTimerOnInput(Button buttons[NUM_BUTTONS]);
 void displayTimer(Adafruit_SSD1306 display);
 
 #endif TIMER_H
