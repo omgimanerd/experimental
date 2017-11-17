@@ -2,26 +2,39 @@
 /// Author: Alvin Lin (alvin@omgimanerd.tech)
 
 #include <Adafruit_SSD1306.h>
-#include <RTClib.h>
+#include <RTCZero.h>
 
 #include "buttons.h"
 #include "constants.h"
 
 #include "clock.h"
 
-const char SUNDAY[] PROGMEM    = "Sunday";
-const char MONDAY[] PROGMEM    = "Monday";
-const char TUESDAY[] PROGMEM   = "Tuesday";
-const char WEDNESDAY[] PROGMEM = "Wednesday";
-const char THURSDAY[] PROGMEM  = "Thursday";
-const char FRIDAY[] PROGMEM    = "Friday";
-const char SATURDAY[] PROGMEM  = "Saturday";
+const char MONTH_NAMES[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
 
-const char* const DAY_NAME[] PROGMEM = {
-  SUNDAY, MONDAY, TUESDAY, WEDNESDAY, THURSDAY, FRIDAY, SATURDAY
+const char DAY_NAMES[7][10] = {
+  "Sunday",
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday"
 };
 
 static bool screenOn = true;
+
+/// Very big thanks to
+/// https://www.hackster.io/jkoger/simple-watch-using-rtc-59e635
+/// For the RTC synchronization code because I was too lazy to write it myself.
+void syncRTC(RTCZero rtc) {
+  char monthString[5];
+  int month, day, year, hour, minute, second;
+  sscanf(__DATE__, "%s %d %d", monthString, &day, &year);
+  sscanf(__TIME__, "%d:%d:%d", &hour, &minute, &second);
+  month = (strstr(MONTH_NAMES, monthString) - MONTH_NAMES) / 3;
+  rtc.setTime(hour, minute, second);
+  rtc.setDate(day, month + 1, year - 2000);
+}
 
 /// Turns on the screen, only used the potentiometer is turned to a non-clock
 /// mode.
@@ -37,20 +50,20 @@ void updateClockOnInput(Button buttons[NUM_BUTTONS]) {
 }
 
 /// Displays the analog clock if the screen has been turned on.
-void displayClock(Adafruit_SSD1306 display, DateTime now) {
+void displayClock(Adafruit_SSD1306 display, RTCZero rtc) {
   if (screenOn) {
-    displayAnalogClock(display, now);
+    displayAnalogClock(display, rtc);
   }
 }
 
 /// Given the display struct and the current DateTime struct, this function
 /// draws an analog clock and displays other relevant time information on the
 /// face of the display.
-void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
+void displayAnalogClock(Adafruit_SSD1306 display, RTCZero rtc) {
   // Some basic math for drawing the clock hands.
   short handLocations[2][2];
-  short h = now.hour();
-  short m = now.minute();
+  short h = rtc.getHours();
+  short m = rtc.getMinutes();
   float minutes_rad = m * (TAU / 60.0);
   float hours_rad = (h * (TAU / 12.0)) + (minutes_rad / 12.0);
 
@@ -89,11 +102,13 @@ void displayAnalogClock(Adafruit_SSD1306 display, DateTime now) {
   char dateBuffer[DATE_BUFFER_SIZE];
   display.setCursor(DAY_OF_WEEK_X, DAY_OF_WEEK_Y);
   display.setTextColor(WHITE);
-  strcpy_P(dateBuffer, (char*) pgm_read_word(&(DAY_NAME[now.dayOfTheWeek()])));
+  int dayOfWeek = ((rtc.getEpoch() / 86400) + 4) % 7;
+  strcpy_P(dateBuffer, DAY_NAMES[dayOfWeek]);
   display.println(dateBuffer);
 
   // Display the date.
-  sprintf(dateBuffer, "%02d/%02d/%04d", now.month(), now.day(), now.year());
+  sprintf(dateBuffer,
+    "%02d/%02d/%04d", rtc.getMonth(), rtc.getDay(), rtc.getYear() + 2000);
   display.setCursor(DATE_X, DATE_Y);
   display.print(dateBuffer);
 

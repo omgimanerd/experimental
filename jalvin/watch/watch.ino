@@ -2,7 +2,7 @@
 /// Author: Alvin Lin (alvin@omgimanerd.tech)
 
 #include <Adafruit_SSD1306.h>
-#include <RTClib.h>
+#include <RTCZero.h>
 
 // buttons.h must come first because of retarded Arduino function prototyping.
 // If this header file is not included first, then the Button struct won't load
@@ -25,7 +25,7 @@
 
 /// Globals for holding the module structs.
 Adafruit_SSD1306 display(OLED_RESET);
-RTC_DS3231 rtc;
+RTCZero rtc;
 
 /// Miscellaneous state variables
 short laserSquiggles = 0;
@@ -42,7 +42,8 @@ Button buttons[NUM_BUTTONS] = {
 
 /// Function called by Arduino to once at the start to initialize variables.
 void setup() {
-  Serial.begin(9600);
+  SerialUSB.begin(9600);
+  Serial1.begin(9600);
 
   pinMode(LEFT_BUTTON, INPUT);
   pinMode(MIDDLE_BUTTON, INPUT);
@@ -52,18 +53,15 @@ void setup() {
   display.setTextColor(WHITE);
   display.clearDisplay();
 
-  // Wait until the RTC is ready.
-  while (!rtc.begin());
-  if (rtc.lostPower()) {
-    rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-  }
+  // Set the starting time for the RTC.
+  rtc.begin();
+  syncRTC(rtc);
 
   lastUpdateTime = millis();
 }
 
 /// Function called by Arduino to update state.
 void loop() {
-  DateTime now = rtc.now();
   short potentiometer = analogRead(POTENTIOMETER);
   float batteryLevel = analogRead(BATTERY);
   float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
@@ -82,7 +80,7 @@ void loop() {
   // never overlap.
   if (mode == CLOCK_MODE) {
     updateClockOnInput(buttons);
-    displayClock(display, now);
+    displayClock(display, rtc);
   } else {
     turnOnClockScreen();
   }

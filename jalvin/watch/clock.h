@@ -22,9 +22,10 @@
 #define DATE_BUFFER_SIZE   11
 #define TIME_BUFFER_SIZE    6
 
+void syncRTC(RTCZero rtc);
 void turnOnClockScreen();
 void updateClockOnInput(Button buttons[NUM_BUTTONS]);
-void displayClock(Adafruit_SSD1306 display, DateTime now);
-void displayAnalogClock(Adafruit_SSD1306 display, DateTime now);
+void displayClock(Adafruit_SSD1306 display, RTCZero rtc);
+void displayAnalogClock(Adafruit_SSD1306 display, RTCZero rtc);
 
 #endif

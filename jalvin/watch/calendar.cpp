@@ -3,6 +3,8 @@
 
 #include <Adafruit_SSD1306.h>
 
+#include "constants.h"
+
 #include "calendar.h"
 
 static unsigned long lastCalendarUpdate = 0;
