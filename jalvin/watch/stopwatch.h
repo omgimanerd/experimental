@@ -15,7 +15,7 @@ void startStopwatch();
 void pauseStopwatch();
 void resetStopwatch();
 void updateStopwatch();
-void updateStopwatchOnInput(bool buttons[BUTTONS][STATES]);
+void updateStopwatchOnInput(unsigned int buttons[BUTTONS][STATES]);
 void displayStopwatch(Adafruit_SSD1306 display);
 
 #endif

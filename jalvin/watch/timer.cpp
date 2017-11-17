@@ -66,7 +66,7 @@ void updateTimer() {
 }
 
 /// Updates the timer's state based on the well-defined button state array.
-void updateTimerOnInput(bool buttons[BUTTONS][STATES]) {
+void updateTimerOnInput(unsigned int buttons[BUTTONS][STATES]) {
   if (buttons[MIDDLE][ON_UP]) {
     if (timerRunning) {
       pauseTimer();

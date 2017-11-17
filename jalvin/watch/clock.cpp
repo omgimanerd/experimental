@@ -29,7 +29,7 @@ void turnOnClockScreen() {
 }
 
 /// Turns the screen on or off based on the well-defined button state array.
-void updateClockOnInput(bool buttons[BUTTONS][STATES]) {
+void updateClockOnInput(unsigned int buttons[BUTTONS][STATES]) {
   if (buttons[LEFT][ON_DOWN] ||
       buttons[MIDDLE][ON_DOWN] ||
       buttons[RIGHT][ON_DOWN]) {

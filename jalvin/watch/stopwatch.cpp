@@ -41,7 +41,7 @@ void updateStopwatch() {
 }
 
 /// Updates the stopwatch's state based on the well-defined button state array.
-void updateStopwatchOnInput(bool buttons[BUTTONS][STATES]) {
+void updateStopwatchOnInput(unsigned int buttons[BUTTONS][STATES]) {
   if (buttons[MIDDLE][ON_DOWN]) {
     if (stopWatchRunning) {
       pauseStopwatch();

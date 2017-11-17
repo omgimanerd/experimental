@@ -30,7 +30,7 @@ unsigned long lastUpdateTime;
 unsigned int deltaTime;
 
 /// Button state trackers.
-bool buttons[BUTTONS][STATES];
+unsigned int buttons[BUTTONS][STATES];
 
 /// Updates the variables storing the state of the buttons and the ON_DOWN
 /// state of the buttons.
