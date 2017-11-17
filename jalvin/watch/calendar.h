@@ -11,7 +11,6 @@
 typedef struct EventStruct {
   unsigned long unixtime;
   char name[MAX_EVENT_STRING_LENGTH];
-  char
 } Event;
 
 void updateCalendar();

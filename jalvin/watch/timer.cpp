@@ -87,7 +87,7 @@ void updateTimerOnInput(Button buttons[NUM_BUTTONS]) {
       incrementTimer(5000);
       lastHoldTime += HOLD_INCR_DECR_INTERVAL;
     } else if (buttons[RIGHT].onUp) {
-      incrementTimer();
+      incrementTimer(1000);
     } else {
       lastHoldTime = HOLD_INCR_DECR_TIME;
     }

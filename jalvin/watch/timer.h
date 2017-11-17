@@ -14,7 +14,7 @@
 #define VIBRATE_DURATION       1000
 #define RESET_HOLD_TIME         500
 #define HOLD_INCR_DECR_TIME    1000
-#define HOlD_INCR_DECR_INTERVAL 500
+#define HOLD_INCR_DECR_INTERVAL 500
 
 void startTimer();
 void pauseTimer();
