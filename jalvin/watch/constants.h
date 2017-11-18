@@ -12,11 +12,11 @@
 #define TITLE_TEXT_Y     5
 
 // Pins of connected components.
-#define LASER            2
+#define MIDDLE_BUTTON    2
 #define LEFT_BUTTON      3
 #define RIGHT_BUTTON     5
 #define OLED_RESET       4
-#define MIDDLE_BUTTON    6
+#define LASER            6
 #define VIBRATION_MOTOR  7
 #define POTENTIOMETER   A0
 #define BATTERY         A1

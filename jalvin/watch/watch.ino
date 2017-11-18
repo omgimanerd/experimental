@@ -104,7 +104,8 @@ void loop() {
     display.print(F("Laser"));
     display.setTextSize(2);
     display.setCursor(0, 30);
-    if (buttons[LEFT].state || buttons[MIDDLE].state || buttons[RIGHT].state) { display.print(F("ON"));
+    if (buttons[LEFT].state || buttons[MIDDLE].state || buttons[RIGHT].state) {
+      display.print(F("ON"));
       for (int i = 0; i < laserSquiggles; ++i) {
         display.print("~");
       }

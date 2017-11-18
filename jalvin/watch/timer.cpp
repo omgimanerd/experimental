@@ -81,12 +81,12 @@ void updateTimerOnInput(Button buttons[NUM_BUTTONS]) {
     if (buttons[LEFT].hold > lastHoldTime) {
       decrementTimer(MAJOR_INCR_DECR_AMOUNT);
       lastHoldTime += HOLD_INCR_DECR_INTERVAL;
-    } else if (buttons[LEFT].onUp) {
+    } else if (buttons[LEFT].onUp && lastHoldTime == HOLD_INCR_DECR_TIME) {
       decrementTimer(MINOR_INCR_DECR_AMOUNT);
-    } else if (buttons[RIGHT].hold) {
+    } else if (buttons[RIGHT].hold > lastHoldTime) {
       incrementTimer(MAJOR_INCR_DECR_AMOUNT);
       lastHoldTime += HOLD_INCR_DECR_INTERVAL;
-    } else if (buttons[RIGHT].onUp) {
+    } else if (buttons[RIGHT].onUp && lastHoldTime == HOLD_INCR_DECR_TIME) {
       incrementTimer(MINOR_INCR_DECR_AMOUNT);
     } else {
       lastHoldTime = HOLD_INCR_DECR_TIME;
