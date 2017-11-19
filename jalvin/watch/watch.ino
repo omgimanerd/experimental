@@ -1,4 +1,4 @@
-/// Main watch driver code.
+ /// Main watch driver code.
 /// Author: Alvin Lin (alvin@omgimanerd.tech)
 
 #include <Adafruit_SSD1306.h>
@@ -60,6 +60,10 @@ void setup() {
   lastUpdateTime = millis();
 }
 
+void wake() {
+
+}
+
 /// Function called by Arduino to update state.
 void loop() {
   short potentiometer = analogRead(POTENTIOMETER);
@@ -87,6 +91,15 @@ void loop() {
 
   if (mode == CALENDAR_MODE) {
     displayCalendar(display);
+    if (buttons[LEFT].onUp) {
+      display.clearDisplay();
+      display.display();
+      attachInterrupt(2, wake, LOW);
+      SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+      __DSB();
+      __WFI();
+      detachInterrupt(2);
+    }
   }
 
   if (mode == STOPWATCH_MODE) {
