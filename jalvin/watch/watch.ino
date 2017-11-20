@@ -49,7 +49,7 @@ void sleep() {
   __WFI();
 }
 
-/// Wakes the device and detaches the interrupt.
+/// Invoked when the devices wakes and detaches the interrupt.
 void wake() {
   detachInterrupt(MIDDLE_BUTTON);
 }
@@ -68,8 +68,18 @@ void setup() {
   display.clearDisplay();
 
   // Set the starting time for the RTC.
+  // Very big thanks to
+  // https://www.hackster.io/jkoger/simple-watch-using-rtc-59e635
+  // For the RTC synchronization code because I was too lazy to write it
+  // myself.
   rtc.begin();
-  syncRTC(rtc);
+  char monthString[5];
+  int month, day, year, hour, minute, second;
+  sscanf(__DATE__, "%s %d %d", monthString, &day, &year);
+  sscanf(__TIME__, "%d:%d:%d", &hour, &minute, &second);
+  month = (strstr(MONTH_NAMES, monthString) - MONTH_NAMES) / 3;
+  rtc.setTime(hour, minute, second);
+  rtc.setDate(day, month + 1, year - 2000);
 
   lastUpdateTime = millis();
 }

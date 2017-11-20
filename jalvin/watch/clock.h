@@ -22,7 +22,6 @@
 #define DATE_BUFFER_SIZE   11
 #define TIME_BUFFER_SIZE    6
 
-void syncRTC(RTCZero rtc);
 void displayAnalogClock(Adafruit_SSD1306 display, RTCZero rtc);
 
 #endif
