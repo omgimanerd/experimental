@@ -15,12 +15,12 @@
 // Pins of connected components.
 #define MIDDLE_BUTTON     2
 #define LEFT_BUTTON       3
-#define RIGHT_BUTTON      5
-#define OLED_RESET        4
-#define LASER             6
-#define VIBRATION_MOTOR   7
+#define RIGHT_BUTTON      4
+#define OLED_RESET       11
+#define VIBRATION_MOTOR  12
+#define LASER            13
 #define POTENTIOMETER    A0
-#define BATTERY          A1
+#define BATTERY          A3
 
 // For button states and their indexes in the array of button structs
 #define NUM_BUTTONS       3
