@@ -12,16 +12,8 @@
 const char MONTH_NAMES[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
 
 const char DAY_NAMES[7][10] = {
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday"
+  "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 };
-
-static bool screenOn = true;
 
 /// Very big thanks to
 /// https://www.hackster.io/jkoger/simple-watch-using-rtc-59e635
@@ -36,30 +28,10 @@ void syncRTC(RTCZero rtc) {
   rtc.setDate(day, month + 1, year - 2000);
 }
 
-/// Turns on the screen, only used the potentiometer is turned to a non-clock
-/// mode.
-void turnOnClockScreen() {
-  screenOn = true;
-}
-
-/// Turns the screen on or off based on the well-defined button state array.
-void updateClockOnInput(Button buttons[NUM_BUTTONS]) {
-  if (buttons[LEFT].onDown || buttons[MIDDLE].onDown || buttons[RIGHT].onDown) {
-    screenOn = !screenOn;
-  }
-}
-
-/// Displays the analog clock if the screen has been turned on.
-void displayClock(Adafruit_SSD1306 display, RTCZero rtc) {
-  if (screenOn) {
-    displayAnalogClock(display, rtc);
-  }
-}
-
 /// Given the display struct and the current DateTime struct, this function
 /// draws an analog clock and displays other relevant time information on the
 /// face of the display.
-void displayAnalogClock(Adafruit_SSD1306 display, RTCZero rtc) {
+void displayClock(Adafruit_SSD1306 display, RTCZero rtc) {
   // Some basic math for drawing the clock hands.
   short handLocations[2][2];
   short h = rtc.getHours();

@@ -40,6 +40,20 @@ Button buttons[NUM_BUTTONS] = {
   { RIGHT_BUTTON, 0, 0, 0, 0, 0 }
 };
 
+/// Puts the watch to sleep.
+void sleep() {
+  display.clearDisplay();
+  display.display();
+  attachInterrupt(MIDDLE_BUTTON, wake, LOW);
+  SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
+  __WFI();
+}
+
+/// Wakes the device and detaches the interrupt.
+void wake() {
+  detachInterrupt(MIDDLE_BUTTON);
+}
+
 /// Function called by Arduino to once at the start to initialize variables.
 void setup() {
   SerialUSB.begin(9600);
@@ -60,15 +74,21 @@ void setup() {
   lastUpdateTime = millis();
 }
 
-void wake() {
-
-}
-
 /// Function called by Arduino to update state.
 void loop() {
-  short potentiometer = analogRead(POTENTIOMETER);
+  // The maximum voltage of the battery is 4.25V, but we cut that amount in
+  // half can only handle 3.3 volts. To calculate the actual battery voltage,
+  // we multiply the voltage read by 2 in the code.
   float batteryLevel = analogRead(BATTERY);
   float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
+  if (voltage < VOLTAGE_SLEEP) {
+    digitalWrite(VIBRATION_MOTOR, HIGH);
+    delay(1000);
+    digitalWrite(VIBRATION_MOTOR, LOW);
+    sleep();
+  }
+
+  short potentiometer = analogRead(POTENTIOMETER);
   byte mode = potentiometer / MODE_INTERVALS;
 
   currentTime = millis();
@@ -83,23 +103,14 @@ void loop() {
   // All the modes are guaranteed to be mutually exclusive so their code will
   // never overlap.
   if (mode == CLOCK_MODE) {
-    updateClockOnInput(buttons);
     displayClock(display, rtc);
-  } else {
-    turnOnClockScreen();
+    if (buttons[MIDDLE].state) {
+      sleep();
+    }
   }
 
   if (mode == CALENDAR_MODE) {
     displayCalendar(display);
-    if (buttons[LEFT].onUp) {
-      display.clearDisplay();
-      display.display();
-      attachInterrupt(2, wake, LOW);
-      SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-      __DSB();
-      __WFI();
-      detachInterrupt(2);
-    }
   }
 
   if (mode == STOPWATCH_MODE) {
