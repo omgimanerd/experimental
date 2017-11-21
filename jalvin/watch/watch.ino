@@ -1,5 +1,4 @@
- /// Main watch driver code.
-/// Author: Alvin Lin (alvin@omgimanerd.tech)
+/// Main watch driver code./// Author: Alvin Lin (alvin@omgimanerd.tech)
 
 #include <Adafruit_SSD1306.h>
 #include <RTCZero.h>
@@ -62,6 +61,13 @@ void setup() {
   pinMode(LEFT_BUTTON, INPUT);
   pinMode(MIDDLE_BUTTON, INPUT);
   pinMode(RIGHT_BUTTON, INPUT);
+  digitalWrite(LEFT_BUTTON, HIGH);
+  digitalWrite(MIDDLE_BUTTON, HIGH);
+  digitalWrite(RIGHT_BUTTON, HIGH);
+  
+  // Turn off the power LED.
+  pinMode(BOARD_LED, OUTPUT);
+  digitalWrite(BOARD_LED, LOW);
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);
   display.setTextColor(WHITE);
@@ -74,6 +80,7 @@ void setup() {
   // myself.
   rtc.begin();
   char monthString[5];
+  const char MONTH_NAMES[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
   int month, day, year, hour, minute, second;
   sscanf(__DATE__, "%s %d %d", monthString, &day, &year);
   sscanf(__TIME__, "%d:%d:%d", &hour, &minute, &second);
@@ -85,13 +92,13 @@ void setup() {
 }
 
 /// Function called by Arduino to update state.
-void loop() {
+void loop() {  
   // The maximum voltage of the battery is 4.25V, but we cut that amount in
   // half can only handle 3.3 volts. To calculate the actual battery voltage,
   // we multiply the voltage read by 2 in the code.
   float batteryLevel = analogRead(BATTERY);
   float voltage = (batteryLevel / ANALOG_LIMIT) * VOLTAGE_MAX * 2;
-  if (voltage < VOLTAGE_SLEEP) {
+  if (voltage < VOLTAGE_SLEEP && voltage > VOLTAGE_EPSILON) {
     digitalWrite(VIBRATION_MOTOR, HIGH);
     delay(1000);
     digitalWrite(VIBRATION_MOTOR, LOW);

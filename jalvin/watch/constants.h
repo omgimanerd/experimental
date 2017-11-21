@@ -8,17 +8,19 @@
 #define TAU            6.28
 #define VOLTAGE_MAX     3.3
 #define VOLTAGE_SLEEP   3.7
+#define VOLTAGE_EPSILON 0.5
 
 #define TITLE_TEXT_X      0
 #define TITLE_TEXT_Y      5
 
 // Pins of connected components.
-#define MIDDLE_BUTTON     2
-#define LEFT_BUTTON       3
+#define LEFT_BUTTON       2
+#define MIDDLE_BUTTON     3
 #define RIGHT_BUTTON      4
-#define OLED_RESET       11
-#define VIBRATION_MOTOR  12
-#define LASER            13
+#define OLED_RESET       10
+#define VIBRATION_MOTOR  11
+#define LASER            12
+#define BOARD_LED        13
 #define POTENTIOMETER    A0
 #define BATTERY          A3
 

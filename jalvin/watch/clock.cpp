@@ -9,8 +9,6 @@
 
 #include "clock.h"
 
-const char MONTH_NAMES[] = "JanFebMarAprMayJunJulAugSepOctNovDec";
-
 const char DAY_NAMES[7][10] = {
   "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
 };
