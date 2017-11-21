@@ -7,7 +7,7 @@
 #define ANALOG_LIMIT   1023
 #define TAU            6.28
 #define VOLTAGE_MAX     3.3
-#define VOLTAGE_SLEEP   3.7
+#define VOLTAGE_SLEEP  3.75
 #define VOLTAGE_EPSILON 0.5
 
 #define TITLE_TEXT_X      0
