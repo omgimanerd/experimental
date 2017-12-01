@@ -9,11 +9,13 @@
 
 static unsigned long lastCalendarUpdate = 0;
 
+static Event events[3];
+
 /// Updates the calendar if necessary.
 void updateCalendar() {
   unsigned long currentTime = millis();
   if (currentTime - lastCalendarUpdate > POLLING_INTERVAL_MS) {
-    // do update
+    Serial1.println(F("Update Required!"));
   }
   lastCalendarUpdate = currentTime;
 }

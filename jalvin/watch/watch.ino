@@ -53,6 +53,20 @@ void wake() {
   detachInterrupt(MIDDLE_BUTTON);
 }
 
+void debug() {
+  SerialUSB.print(analogRead(POTENTIOMETER));
+  SerialUSB.print(" ");
+  SerialUSB.print(buttons[LEFT].state);
+  SerialUSB.print(" ");
+  SerialUSB.print(buttons[MIDDLE].state);
+  SerialUSB.print(" ");
+  SerialUSB.print(buttons[RIGHT].state);
+  SerialUSB.println("");
+  digitalWrite(BOARD_LED, HIGH);
+  digitalWrite(VIBRATION_MOTOR, HIGH);
+  digitalWrite(LASER, HIGH);
+}
+
 /// Function called by Arduino to once at the start to initialize variables.
 void setup() {
   SerialUSB.begin(9600);
@@ -66,8 +80,8 @@ void setup() {
   digitalWrite(RIGHT_BUTTON, HIGH);
   
   // Turn off the power LED.
-  pinMode(BOARD_LED, OUTPUT);
-  digitalWrite(BOARD_LED, LOW);
+//  pinMode(BOARD_LED, OUTPUT);
+//  digitalWrite(BOARD_LED, LOW);
 
   display.begin(SSD1306_SWITCHCAPVCC, 0x3D);
   display.setTextColor(WHITE);
@@ -170,6 +184,8 @@ void loop() {
     display.println(F("V"));
     display.setTextSize(1);
   }
+
+  debug();
 
   display.display();
   display.clearDisplay();

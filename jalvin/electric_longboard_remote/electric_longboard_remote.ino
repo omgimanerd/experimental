@@ -17,41 +17,39 @@ int otherlastButtonState = 0;
 void setup()
 {
     Serial.begin(9600);
-    if (!driver.init())
-         Serial.println("init failed");
+    if (!driver.init()) {
+      Serial.println("init failed"); 
+    }
     pinMode(leftButton, INPUT);
     pinMode(rightButton, INPUT);
     digitalWrite(2, HIGH);
 }
 
-void loop()
-{
-    const char *msg = "Left";
-    const char *msg2 = "Right";
-    Serial.println(otherbuttonPushCounter);
-    Serial.println("1");
-    buttonState = digitalRead(leftButton);
-    otherbuttonState = digitalRead(rightButton);
-    Serial.println("2");
+void loop() {
+  const char *msg = "Left";
+  const char *msg2 = "Right";
+  Serial.println(otherbuttonPushCounter);
+  buttonState = digitalRead(leftButton);
+  otherbuttonState = digitalRead(rightButton);
 
-    if (buttonState != lastButtonState) {
-      if (buttonState == LOW) {
-        driver.send((uint8_t *)msg, strlen(msg));
-        driver.waitPacketSent();
-        buttonPushCounter++;
-      }
-      delay(50);
+  driver.send((uint8_t *)msg, strlen(msg));
+  driver.waitPacketSent();
+  
+  if (buttonState != lastButtonState) {
+    if (buttonState == LOW) {
+      buttonPushCounter++;
     }
-    lastButtonState = buttonState;
-    Serial.println("3");
+    delay(50);
+  }
+  lastButtonState = buttonState;
 
-    if (otherbuttonState != otherlastButtonState) {
-      if (otherbuttonState == LOW) {
-        driver.send((uint8_t *)msg2, strlen(msg2));
-        driver.waitPacketSent();
-        otherbuttonPushCounter++;
-      }
-      delay(50);
+  if (otherbuttonState != otherlastButtonState) {
+    if (otherbuttonState == LOW) {
+      driver.send((uint8_t *)msg2, strlen(msg2));
+      driver.waitPacketSent();
+      otherbuttonPushCounter++;
     }
-    otherlastButtonState = otherbuttonState;
+    delay(50);
+  }
+  otherlastButtonState = otherbuttonState;
 }
