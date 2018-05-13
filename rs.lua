@@ -8,6 +8,7 @@ local sides = require('sides')
 local rs = component.block_refinedstorage_interface
 
 for i, item in ipairs(rs.getItems()) do
+  print(i, item)
   for j, k in ipairs(item) do
     print(j, k)
   end
