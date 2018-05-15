@@ -34,8 +34,10 @@ for n, pattern in ipairs(rs.getPatterns()) do
     local input_required = (craft_amount / output.size) * input.size
     local input_stock = rs.getItem(input)
     if input_stock == nil then
+      craft_amount = 0
       print('ERROR: We ran out of the ' .. input.label)
     elseif input_stock.size == 1 then
+      craft_amount = 0
       print('WARNING: We only have 1 of ' .. input.label .. ' and cannot restock ' .. output.label)
     elseif input_required >= input_stock.size then
       craft_amount = ((input_stock.size - 1) / input.size) * output.size
@@ -49,7 +51,7 @@ for n, pattern in ipairs(rs.getPatterns()) do
       rs.scheduleTask(output, craft_amount)
       print('INFO: Crafting ' .. craft_amount .. ' of ' .. output.label)
     end
-    
-    print('Done!')
   end
 end
+
+print('Done!')
