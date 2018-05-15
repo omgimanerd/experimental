@@ -5,7 +5,7 @@
 
 local component = require('component')
 
-local rs = component..
+local rs = component.proxy(component.get('e4299aeb'))
 local threshold = 1000
 
 local function str_contains(s, substring)
@@ -16,7 +16,7 @@ for n, pattern in ipairs(rs.getPatterns()) do
   local output = pattern.outputs[1]
   if str_contains(output.name, 'dye') then
     --[[
-      Calculate how much dye is needed to meet our threshold.
+      Calculate how much dye is needed to meet our supply threshold.
     --]]
     local craft_amount = 0
     local output_stock = rs.getItem(output)
@@ -34,9 +34,12 @@ for n, pattern in ipairs(rs.getPatterns()) do
     local input_required = (craft_amount / output.size) * input.size
     local input_stock = rs.getItem(input)
     if input_stock == nil then
-      print('We ran out of the input plant! This is a problem!')
+      print('ERROR: We ran out of the ' .. input.label)
+    elseif input_stock.size == 1 then
+      print('WARNING: We only have 1 of ' .. input.label .. ' and cannot restock ' .. output.label)
     elseif input_required >= input_stock.size then
       craft_amount = ((input_stock.size - 1) / input.size) * output.size
+      print('WARNING: We are running out of ' .. input_stock.label)
     end
 
     --[[
@@ -44,9 +47,9 @@ for n, pattern in ipairs(rs.getPatterns()) do
     --]]
     if craft_amount > 0 then
       rs.scheduleTask(output, craft_amount)
-      print('Crafting ' .. craft_amount .. ' of ' .. output.label)
-    else
-      print('Supply of ' .. output_stock.size .. ' ' .. output .. ' is nominal')
+      print('INFO: Crafting ' .. craft_amount .. ' of ' .. output.label)
     end
+    
+    print('Done!')
   end
 end
