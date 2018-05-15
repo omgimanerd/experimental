@@ -5,7 +5,7 @@
 
 local component = require('component')
 
-local rs = component..
+local rs = component.proxy(component.get('e4299aeb'))
 local threshold = 5000
 
 local function str_contains(s, substring)
@@ -19,7 +19,10 @@ for n, pattern in ipairs(rs.getPatterns()) do
       Calculate how much concrete is needed to meet our threshold.
     --]]
     local craft_amount = 0
-    local output_stock = rs.getItem(output)
+    local output_stock = rs.getItem({
+      name='minecraft:concrete',
+      damage='output.damage
+    })
     if output_stock == nil then
       craft_amount = threshold
     elseif output_stock.size < threshold then
@@ -31,9 +34,7 @@ for n, pattern in ipairs(rs.getPatterns()) do
     --]]
     if craft_amount > 0 then
       rs.scheduleTask(output, craft_amount)
-      print(output.label .. ': Crafting ' .. craft_amount)
-    else
-      print('Supply of ' .. output_stock.size .. ' ' .. output .. ' is nominal')
+      print('INFO: Crafting ' .. craft_amount .. ' of ' .. output.label)
     end
   end
 end
