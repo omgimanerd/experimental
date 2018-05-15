@@ -1,5 +1,6 @@
 --[[
-Lua script for restocking concrete [OpenComputers]
+  Lua script for restocking concrete [Minecraft OpenComputers]
+  Author: omgimanerd (alvin@omgimanerd.tech)
 --]]
 
 local component = require('component')
@@ -8,7 +9,7 @@ local rs = component..
 local threshold = 5000
 
 local function str_contains(s, substring)
-  return string.find(s, substring) == nil
+  return string.find(s, substring) ~= nil
 end
 
 for n, pattern in ipairs(rs.getPatterns()) do
@@ -30,9 +31,9 @@ for n, pattern in ipairs(rs.getPatterns()) do
     --]]
     if craft_amount > 0 then
       rs.scheduleTask(output, craft_amount)
-      print('Crafting ' .. craft_amount .. ' of ' .. output.label)
+      print(output.label .. ': Crafting ' .. craft_amount)
     else
-      print('Supply of ' craft_amount .. ' ' .. output .. ' is nominal')
+      print('Supply of ' .. output_stock.size .. ' ' .. output .. ' is nominal')
     end
   end
 end

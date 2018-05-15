@@ -1,14 +1,15 @@
 --[[
-Lua script for restocking dye [OpenComputers]
+  Lua script for restocking dye [Minecraft OpenComputers]
+  Author: omgimanerd (alvin@omgimanerd.tech)
 --]]
 
 local component = require('component')
 
-local rs = component...
+local rs = component..
 local threshold = 1000
 
 local function str_contains(s, substring)
-  return string.find(s, substring) == nil
+  return string.find(s, substring) ~= nil
 end
 
 for n, pattern in ipairs(rs.getPatterns()) do
@@ -45,7 +46,7 @@ for n, pattern in ipairs(rs.getPatterns()) do
       rs.scheduleTask(output, craft_amount)
       print('Crafting ' .. craft_amount .. ' of ' .. output.label)
     else
-      print('Supply of ' craft_amount .. ' ' .. output .. ' is nominal')
+      print('Supply of ' .. output_stock.size .. ' ' .. output .. ' is nominal')
     end
   end
 end
