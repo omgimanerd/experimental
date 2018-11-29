@@ -6,6 +6,8 @@
  */
 
 #include <Servo.h>
+#include <RH_ASK.h>
+#include <SPI.h>
 
 #define MOTOR_PIN 9
 #define POTENTIOMETER_PIN A0
@@ -16,7 +18,7 @@
 #define MAX_POWER 180
 #define POWER_DECAY_RATE 0.025
 
-// Initialize the driving motor
+RH_ASK receiver;
 Servo motor;
 
 // State variables
@@ -63,30 +65,45 @@ void setup() {
   motor.attach(MOTOR_PIN);
   initialize();
 
+  if (!receiver.init()) {
+    Serial.println("Initialization failed!");
+  } else {
+    Serial.println("Receiver ready!");
+  }
+
   pinMode(BUTTON_PIN, INPUT);
   digitalWrite(BUTTON_PIN, HIGH);
 }
 
 void loop() {
-  int throttle = analogRead(POTENTIOMETER_PIN);
-  throttle = map(throttle, 0, 1023, MIN_POWER, MAX_POWER);
-  int button = digitalRead(BUTTON_PIN);
-
-  long currentTime = micros();
-  deltaTime = (currentTime - lastUpdateTime) / 1000;
-  lastUpdateTime = currentTime;
-
-  /**
-   * If the button is pressed, we set that to the throttle, otherwise we
-   * start scaling down the power (coasting).
-   */
-  if (!button) {
-    currentPower = throttle;
+  uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
+  uint8_t buflen = sizeof(buf);
+  if (receiver.recv(buf, &buflen)) {
+    buf[buflen] = 0;
+    Serial.println((char *) buf);
   } else {
-    currentPower = max(
-      MIN_POWER, currentPower - (deltaTime * POWER_DECAY_RATE));
+    Serial.println("no data");
   }
-  Serial.println(currentPower);
-
-  motor.write((int) currentPower);
+  delay(500);
+//  int throttle = analogRead(POTENTIOMETER_PIN);
+//  throttle = map(throttle, 0, 1023, MIN_POWER, MAX_POWER);
+//  int button = digitalRead(BUTTON_PIN);
+//
+//  long currentTime = micros();
+//  deltaTime = (currentTime - lastUpdateTime) / 1000;
+//  lastUpdateTime = currentTime;
+//
+//  /**
+//   * If the button is pressed, we set that to the throttle, otherwise we
+//   * start scaling down the power (coasting).
+//   */
+//  if (!button) {
+//    currentPower = throttle;
+//  } else {
+//    currentPower = max(
+//      MIN_POWER, currentPower - (deltaTime * POWER_DECAY_RATE));
+//  }
+//  Serial.println(currentPower);
+//
+//  motor.write((int) currentPower);
 }

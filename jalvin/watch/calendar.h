@@ -6,7 +6,7 @@
 
 #define MAX_EVENT_STRING_LENGTH 14
 
-#define POLLING_INTERVAL_MS 60000
+#define POLLING_INTERVAL_MS 10000
 
 typedef struct EventStruct {
   unsigned long unixtime;
