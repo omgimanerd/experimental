@@ -1,0 +1,26 @@
+html, body {
+  width: 100%;
+  margin: 0;
+  border: 0;
+  padding: 20px;
+}
+
+canvas {
+  width: 600px;
+  height: 30px;
+  border: 1px solid black;
+}
+
+table {
+  border: 1px solid black;
+}
+
+table td {
+  margin: 0;
+  border: 1px solid black;
+  padding: 5px;
+}
+
+table tr.current {
+  color: red;
+}
