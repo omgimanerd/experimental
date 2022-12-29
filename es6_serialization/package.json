@@ -1,0 +1,27 @@
+{
+  "name": "es6_serialization",
+  "version": "1.0.0",
+  "description": "",
+  "main": "es6_serialization.ts",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/omgimanerd/experimental.git"
+  },
+  "author": "alvin@omgimanerd.tech",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omgimanerd/experimental/issues"
+  },
+  "homepage": "https://github.com/omgimanerd/experimental#readme",
+  "dependencies": {
+    "@types/gulp": "^4.0.10",
+    "del": "^7.0.0",
+    "gulp": "^4.0.2",
+    "gulp-typescript": "^6.0.0-alpha.1",
+    "typescript": "^4.9.4"
+  }
+}
