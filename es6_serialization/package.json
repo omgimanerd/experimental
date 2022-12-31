@@ -5,7 +5,7 @@
   "main": "es6_serialization.ts",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "invoke": "node --experimental-specifier-resolution=node"
   },
   "repository": {
     "type": "git",
@@ -19,9 +19,14 @@
   "homepage": "https://github.com/omgimanerd/experimental#readme",
   "dependencies": {
     "@types/gulp": "^4.0.10",
+    "@typescript-eslint/eslint-plugin": "^5.47.1",
+    "@typescript-eslint/parser": "^5.47.1",
     "del": "^7.0.0",
+    "eslint": "^8.30.0",
+    "eslint-plugin-prettier": "^4.2.1",
     "gulp": "^4.0.2",
     "gulp-typescript": "^6.0.0-alpha.1",
+    "prettier": "^2.8.1",
     "typescript": "^4.9.4"
   }
 }
