@@ -1,0 +1,53 @@
+#/bin/bash
+#
+# Needs to be added to .bashrc to work:
+# if [ -f ~/.autocompletions ]; then
+#   . ~/.autocompletions
+# fi
+
+_generate_completions() {
+  # Initialize COMPREPLY with the '.' token to start the directory search in
+  # the current directory.
+  COMPREPLY=(".")
+
+  # If there is a trailing slash in the completion argument, treat it as a
+  # wildcard. Trailing slashes cannot be split correctly since the last token
+  # is an empty string and will be omitted.
+  if [[ "${COMP_WORDS[-1]}" =~ ^.*/$ ]]; then
+    COMP_WORDS[-1]="${COMP_WORDS[-1]}*"
+  fi
+
+  # Split the completion argument by the forward slash delimiter into tokens.
+  IFS="/" read -ra TOKENS <<< "${COMP_WORDS[-1]}"
+
+  # Iterate through the tokens to build paths for all the matching
+  # subdirectories
+  for TOKEN in "${TOKENS[@]}"; do
+    # Ignore the '.' token in case the path starts with ./
+    if [[ $TOKEN == "." ]]; then
+      continue
+    # Remove the wildcard token since we add it ourselves
+    elif [[ $TOKEN == "*" ]]; then
+      TOKEN=""
+    fi
+    # Every time we find token matches, store them in NEW_PATHS, which we
+    # write back to COMPREPLY for each token iteration.
+    NEW_PATHS=()
+    for A_PATH in "${COMPREPLY[@]}"; do
+      for MATCH in "$A_PATH"/"$TOKEN"*; do
+        if [[ -e "$MATCH" && -d "$MATCH" ]]; then
+          # Strip the ./prefix from the matches
+          NEW_PATHS+=("${MATCH#./}")
+        fi
+      done
+    done
+    COMPREPLY=("${NEW_PATHS[@]}")
+  done
+}
+
+# Allows for all entries in COMPREPLY to be shown when we press TAB
+set show-all-if-ambiguous on
+
+# Do not set -o plusdirs or the result will be duplicated if there is a single
+# directory match.
+complete -F _generate_completions -o dirnames -o nospace cd
