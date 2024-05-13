@@ -1,18 +1,15 @@
 [push]
 	default = simple
 [user]
-	email = alvin.lin.dev@gmail.com
+	email = alvin@omgimanerd.tech
 	name = omgimanerd
-[core]
-	editor = emacs
 [help]
 	autocorrect = 10
-[diff]
-	tool = tkdiff
 [alias]
   unstage = "reset HEAD --"
   s = "status"
   please = "push --force-with-lease"
   commend = "commit --amend --no-edit"
   fuckit = "commit -am"
-  grog = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+  tree = log --graph --abbrev-commit --decorate --all --format=format:\"%C(bold blue)%h%C(reset) - %C(bold cyan)%aD%C(dim white) - %an%C(reset) %C(bold green)(%ar)%C(reset)%C(bold yellow)%d%C(reset)%n %C(white)%s%C(reset)\"
+  t = tree
