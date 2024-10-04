@@ -1,7 +1,12 @@
 #!/bin/bash
 
+# Returns the command prompt formatted with the current git workspace state
+# if the current working directory is a git directory.
 function ps1_() {
 
+  # Escapes the non-printing characters in the given argument string. If the
+  # command prompt is not escaped, the text length of ANSI color codes is
+  # computed incorrectly and the cursor will jump erratically.
   # https://stackoverflow.com/a/52465778/5792737
   function readline_ANSI_escape() {
     if [[ $# -ge 1 ]]; then
@@ -12,6 +17,8 @@ function ps1_() {
     perl -pe 's/(?:(?<!\x1)|(?<!\\\[))(\x1b\[[0-9;]*[mG])(?!\x2|\\\])/\x1\1\x2/g'
   }
 
+  # ANSI-C Quoted Strings for the ANSI color codes
+  # https://www.gnu.org/software/bash/manual/html_node/ANSI_002dC-Quoting.html
   local RESET=$'\e[0m'
   local BOLD=$'\e[1m'
   local DIM=$'\e[2m'
@@ -35,17 +42,18 @@ function ps1_() {
   local LIGHT_CYAN=$'\e[96m'
   local WHITE=$'\e[97m'
 
-  git_status() {
-    GIT_STATUS=$(git status -s 2> /dev/null | cut -c1,2 | sort | uniq | \
-      sed -r "s/([A-Z])([A-Z])/${LIGHT_GREEN}\1${RED}\2/" | \
-      sed -r "s/ ([A-Z])/${RED}\1/" | \
-      sed -r "s/([A-Z]) /${LIGHT_GREEN}\1/" | \
-      sed "s/??/${RED}?${RESET}/" | \
-      paste -sd ' ')
-    echo "${WHITE}[$GIT_STATUS${WHITE}]${RESET} "
-  }
+  local GIT_STATUS=$(git status -s 2> /dev/null | cut -c1,2 | sort | uniq | \
+    sed -r "s/([A-Z])([A-Z])/${LIGHT_GREEN}\1${RED}\2/" | \
+    sed -r "s/ ([A-Z])/${RED}\1/" | \
+    sed -r "s/([A-Z]) /${LIGHT_GREEN}\1/" | \
+    sed "s/??/${RED}?${RESET}/" | \
+    paste -sd ' ')
+  local GIT_STATUS_PROMPT="${WHITE}[${GIT_STATUS}${WHITE}]${RESET} "
+  local USER_PROMPT="${LIGHT_GREEN}$(whoami)${RESET}:"
+  local DIRS_PROMPT="${LIGHT_BLUE}$(dirs)${RESET}"
 
-  readline_ANSI_escape "$(git_status)${BOLD}${LIGHT_GREEN}$(whoami)${RESET}:${LIGHT_BLUE}$(dirs)${RESET}\$ "
+  readline_ANSI_escape "$GIT_STATUS_PROMPT${USER_PROMPT}${DIRS_PROMPT}\$ "
 }
 
+# ps1 function is single quoted for evaluation in the terminal itself.
 PS1='$(ps1_)'
