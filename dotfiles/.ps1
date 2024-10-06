@@ -56,11 +56,11 @@ function ps1_() {
     # Newly added files show up as '?'
     sed "s/??/${RED}?${RESET}/" | \
     paste -sd ' ')
-  local GIT_STATUS_PROMPT="${WHITE}[${GIT_STATUS}${WHITE}]${RESET} "
+  local GIT_STATUS_="${WHITE}[${GIT_STATUS}${WHITE}]${RESET} "
   local USER_="${LIGHT_GREEN}${USER}${RESET}:"
   local PWD_="${LIGHT_BLUE}${PWD}${RESET}"
 
-  readline_ANSI_escape "${USER_}${PWD_}\$ "
+  readline_ANSI_escape "${GIT_STATUS_}${USER_}${PWD_}\$ "
 }
 
 # ps1 function is single quoted for evaluation in the terminal itself.
