@@ -8,8 +8,8 @@
 _generate_completions() {
   # COMP_WORDS is an array variable consisting of the individual words on the
   # current command line. The last word is the completion argument for the cd
-  # command. Isolate it and strip off trailing slashes.
-  local PATH_ARG="${COMP_WORDS[-1]%%*(/)}"
+  # command.
+  local PATH_ARG="${COMP_WORDS[-1]}"
   # Strip off ./ if it starts with that.
   PATH_ARG="${PATH_ARG#./}"
   # Remove all instances of the wildcard token.
@@ -17,6 +17,12 @@ _generate_completions() {
 
   # Split the completion argument by the forward slash delimiter into.
   IFS="/" read -ra TOKENS <<< $PATH_ARG
+  # If the last character of the COMP_WORDS was the delimeter character,
+  # add an empty space into TOKENS so that we glob search all directories
+  # in the subdirectory.
+  if [[ ${COMP_WORDS[-1]:(-1):1} == "/" ]]; then
+    TOKENS+=('')
+  fi
 
   # Iterate through the tokens to build paths for all subdirectories that match
   # the path glob. Start the directory search in the current directory.
