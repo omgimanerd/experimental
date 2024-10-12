@@ -58,7 +58,7 @@ function ps1_() {
     paste -sd ' ')
   local GIT_STATUS_="${WHITE}[${GIT_STATUS}${WHITE}]${RESET} "
   local USER_="${LIGHT_GREEN}${USER}${RESET}:"
-  local PWD_="${LIGHT_BLUE}${PWD}${RESET}"
+  local PWD_="${LIGHT_BLUE}${PWD/~/\~}${RESET}"
 
   readline_ANSI_escape "${GIT_STATUS_}${USER_}${PWD_}\$ "
 }
