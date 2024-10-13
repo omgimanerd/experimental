@@ -4,10 +4,28 @@ set boldtext
 set linenumbers
 set zap
 
-# Move line up and down
-unbind M-p main
-bind M-p "[A[A" main
-bind M-n "[B[A" main
+# Quit
+unbind ^Q main
+bind ^Q exit main
 
-bind ^/ comment main
+# Comment
 unbind ^/ main
+bind ^/ comment main
+
+# Cut / Paste
+unbind ^X main
+bind ^X cut main
+unbind ^C main
+bind ^C copy main
+
+# Undo / Redo
+unbind ^Z main
+bind ^Z undo main
+unbind ^Y main
+bind ^Y redo main
+
+# Custom macros
+unbind ^I main
+bind ^I "{home}{cut}{up}{paste}{up}" main
+unbind ^K main
+bind ^K "{home}{cut}{down}{paste}{up}" main
