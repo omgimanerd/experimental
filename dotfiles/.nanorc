@@ -1,0 +1,13 @@
+# Base settings
+set autoindent
+set boldtext
+set linenumbers
+set zap
+
+# Move line up and down
+unbind M-p main
+bind M-p "[A[A" main
+bind M-n "[B[A" main
+
+bind ^/ comment main
+unbind ^/ main
